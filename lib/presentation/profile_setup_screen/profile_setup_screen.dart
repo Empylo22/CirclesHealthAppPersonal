@@ -1,3 +1,5 @@
+import '../edit_profile_picture_popup_dialog/controller/edit_profile_picture_popup_controller.dart';
+import '../edit_profile_picture_popup_dialog/edit_profile_picture_popup_dialog.dart';
 import 'controller/profile_setup_controller.dart';
 import 'package:empylo/core/app_export.dart';
 import 'package:empylo/widgets/app_bar/appbar_leading_iconbutton.dart';
@@ -40,6 +42,9 @@ class ProfileSetupScreen extends GetWidget<ProfileSetupController> {
                             radius: BorderRadius.circular(53.h),
                             alignment: Alignment.centerLeft),
                         CustomIconButton(
+                            onTap: () {
+                              onTapBtnUser();
+                            },
                             height: 36.adaptSize,
                             width: 36.adaptSize,
                             padding: EdgeInsets.all(10.h),
@@ -73,6 +78,34 @@ class ProfileSetupScreen extends GetWidget<ProfileSetupController> {
                           child: Text("lbl_date_of_birth".tr,
                               style: theme.textTheme.labelLarge))),
                   SizedBox(height: 3.v),
+                  CustomTextFormField(
+                    controller: controller.dateofbirthController,
+                    textInputAction: TextInputAction.done,
+                    hintText: "lbl_mm_dd_yyyy".tr,
+                    hintStyle: CustomTextStyles.titleSmallBluegray400,
+                    prefix: Container(
+                        margin: EdgeInsets.fromLTRB(15.h, 10.v, 5.h, 10.v),
+                        child: CustomImageView(
+                            imagePath: ImageConstant.imgUilcalender,
+                            height: 24.adaptSize,
+                            width: 24.adaptSize)),
+                    prefixConstraints: BoxConstraints(maxHeight: 44.v),
+                    suffix: Container(
+                        margin: EdgeInsets.fromLTRB(30.h, 13.v, 12.h, 7.v),
+                        child: CustomImageView(
+                            //imagePath: ImageConstant.imgPepiconspencilpen,
+                            height: 24.adaptSize,
+                            width: 24.adaptSize)),
+                    //suffixConstraints: BoxConstraints(maxHeight: 44.v)
+                  ),
+                  SizedBox(height: 22.v),
+                  Align(
+                      alignment: Alignment.centerLeft,
+                      child: Padding(
+                          padding: EdgeInsets.only(left: 16.h),
+                          child: Text("lbl_gender".tr,
+                              style: theme.textTheme.labelLarge))),
+                  SizedBox(height: 2.v),
                   CustomDropDown(
                       icon: Container(
                           margin: EdgeInsets.fromLTRB(30.h, 6.v, 8.h, 6.v),
@@ -80,14 +113,14 @@ class ProfileSetupScreen extends GetWidget<ProfileSetupController> {
                               imagePath: ImageConstant.imgArrowup,
                               height: 32.adaptSize,
                               width: 32.adaptSize)),
-                      hintText: "lbl_mm_dd_yyyy".tr,
+                      hintText: "Select your Gender".tr,
                       hintStyle: CustomTextStyles.titleSmallBluegray400,
-                      items: controller
-                          .profileSetupModelObj.value.dropdownItemList!.value,
+                      items: controller.profileSetupModelObj.value
+                          .genderDropdownItemList!.value,
                       prefix: Container(
                           margin: EdgeInsets.fromLTRB(15.h, 10.v, 5.h, 10.v),
                           child: CustomImageView(
-                              imagePath: ImageConstant.imgUilcalender,
+                              imagePath: ImageConstant.imgFrame257,
                               height: 24.adaptSize,
                               width: 24.adaptSize)),
                       prefixConstraints: BoxConstraints(maxHeight: 44.v),
@@ -99,23 +132,11 @@ class ProfileSetupScreen extends GetWidget<ProfileSetupController> {
                   Align(
                       alignment: Alignment.centerLeft,
                       child: Padding(
-                          padding: EdgeInsets.only(left: 16.h),
-                          child: Text("lbl_gender".tr,
-                              style: theme.textTheme.labelLarge))),
-                  SizedBox(height: 2.v),
-                  Padding(
-                      padding: EdgeInsets.only(left: 1.h),
-                      child: _buildFourteen(
-                          imageFrame: ImageConstant.imgFrame257)),
-                  SizedBox(height: 22.v),
-                  Align(
-                      alignment: Alignment.centerLeft,
-                      child: Padding(
                           padding: EdgeInsets.only(left: 15.h),
                           child: Text("lbl_location".tr,
                               style: theme.textTheme.labelLarge))),
                   SizedBox(height: 2.v),
-                  _buildFourteen(imageFrame: ImageConstant.imgFrame258),
+                  _buildFourteen(),
                   SizedBox(height: 42.v),
                   CustomElevatedButton(
                       text: "lbl_save_continue".tr,
@@ -166,23 +187,41 @@ class ProfileSetupScreen extends GetWidget<ProfileSetupController> {
   }
 
   /// Common widget
-  Widget _buildFourteen({required String imageFrame}) {
-    return Container(
-        padding: EdgeInsets.symmetric(horizontal: 7.h, vertical: 5.v),
-        decoration: AppDecoration.outlineTeal
-            .copyWith(borderRadius: BorderRadiusStyle.roundedBorder20),
-        child:
-            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          CustomImageView(
-              imagePath: imageFrame,
-              height: 24.adaptSize,
-              width: 24.adaptSize,
-              margin: EdgeInsets.only(left: 8.h, top: 4.v, bottom: 4.v)),
-          CustomImageView(
-              imagePath: ImageConstant.imgArrowup,
-              height: 32.adaptSize,
-              width: 32.adaptSize)
-        ]));
+  Widget _buildFourteen() {
+    return CustomDropDown(
+        icon: Container(
+            margin: EdgeInsets.fromLTRB(30.h, 6.v, 8.h, 6.v),
+            child: CustomImageView(
+                imagePath: ImageConstant.imgArrowup,
+                height: 32.adaptSize,
+                width: 32.adaptSize)),
+        items: controller
+            .locationSetupModelObj.value.locationDropdownItemList!.value,
+        prefix: Container(
+            margin: EdgeInsets.fromLTRB(15.h, 10.v, 5.h, 10.v),
+            child: CustomImageView(
+                imagePath: ImageConstant.imgFrame258,
+                height: 24.adaptSize,
+                width: 24.adaptSize)),
+        prefixConstraints: BoxConstraints(maxHeight: 44.v),
+        contentPadding: EdgeInsets.symmetric(vertical: 13.v),
+        onChanged: (value) {
+          controller.onSelected(value);
+        });
+  }
+
+  /// Displays a dialog with the [EditProfilePicturePopupDialog] content.
+  onTapBtnUser() {
+    Get.dialog(AlertDialog(
+      backgroundColor: Colors.transparent,
+      contentPadding: EdgeInsets.zero,
+      insetPadding: const EdgeInsets.only(left: 0),
+      content: EditProfilePicturePopupDialog(
+        Get.put(
+          EditProfilePicturePopupController(),
+        ),
+      ),
+    ));
   }
 
   /// Navigates to the previous screen.
