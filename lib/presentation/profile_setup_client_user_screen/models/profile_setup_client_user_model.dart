@@ -7,16 +7,52 @@ class ProfileSetupClientUserModel {
   Rx<List<SelectionPopupModel>> dropdownItemList = Rx([
     SelectionPopupModel(
       id: 1,
-      title: "Item One",
+      title: "0-9",
       isSelected: true,
     ),
     SelectionPopupModel(
       id: 2,
-      title: "Item Two",
+      title: "10-19",
     ),
     SelectionPopupModel(
       id: 3,
-      title: "Item Three",
+      title: "20-29",
+    ),
+    SelectionPopupModel(
+      id: 4,
+      title: "30-39",
+    ),
+    SelectionPopupModel(
+      id: 5,
+      title: "40-49",
+    ),
+    SelectionPopupModel(
+      id: 6,
+      title: "50-59",
+    ),
+    SelectionPopupModel(
+      id: 7,
+      title: "60-69",
+    ),
+    SelectionPopupModel(
+      id: 8,
+      title: "70-79",
+    ),
+    SelectionPopupModel(
+      id: 9,
+      title: "80-89",
+    ),
+    SelectionPopupModel(
+      id: 10,
+      title: "90-99",
+    ),
+    SelectionPopupModel(
+      id: 11,
+      title: "100-109",
+    ),
+    SelectionPopupModel(
+      id: 12,
+      title: "110-119",
     )
   ]);
 
