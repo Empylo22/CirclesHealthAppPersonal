@@ -4,19 +4,34 @@ import '../../../core/app_export.dart';
 /// This class defines the variables used in the [profile_setup_screen],
 /// and is typically used to hold data that is passed between different parts of the application.
 class ProfileSetupModel {
-  Rx<List<SelectionPopupModel>> dropdownItemList = Rx([
+  Rx<List<SelectionPopupModel>> genderDropdownItemList = Rx([
     SelectionPopupModel(
       id: 1,
-      title: "Item One",
+      title: "Male",
       isSelected: true,
     ),
     SelectionPopupModel(
       id: 2,
-      title: "Item Two",
+      title: "Female",
     ),
     SelectionPopupModel(
       id: 3,
-      title: "Item Three",
+      title: "Others",
+    )
+  ]);
+  Rx<List<SelectionPopupModel>> locationDropdownItemList = Rx([
+    SelectionPopupModel(
+      id: 1,
+      title: "United States",
+      isSelected: true,
+    ),
+    SelectionPopupModel(
+      id: 2,
+      title: "United Kingdom",
+    ),
+    SelectionPopupModel(
+      id: 3,
+      title: "United Arab Emirates",
     )
   ]);
 }
