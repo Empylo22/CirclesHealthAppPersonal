@@ -8,24 +8,27 @@ import 'package:flutter/material.dart';
 /// current profileSetupModelObj
 class ProfileSetupController extends GetxController {
   TextEditingController pepiconspencilpenController = TextEditingController();
-
+  TextEditingController dateofbirthController = TextEditingController();
   Rx<ProfileSetupModel> profileSetupModelObj = ProfileSetupModel().obs;
-
+  Rx<ProfileSetupModel> locationSetupModelObj = ProfileSetupModel().obs;
   SelectionPopupModel? selectedDropDownValue;
 
   @override
   void onClose() {
     super.onClose();
     pepiconspencilpenController.dispose();
+    dateofbirthController.dispose();
   }
 
   onSelected(dynamic value) {
-    for (var element in profileSetupModelObj.value.dropdownItemList.value) {
+    for (var element
+        in profileSetupModelObj.value.genderDropdownItemList.value) {
       element.isSelected = false;
       if (element.id == value.id) {
         element.isSelected = true;
       }
     }
-    profileSetupModelObj.value.dropdownItemList.refresh();
+    profileSetupModelObj.value.genderDropdownItemList.refresh();
+    locationSetupModelObj.value.locationDropdownItemList.refresh();
   }
 }
