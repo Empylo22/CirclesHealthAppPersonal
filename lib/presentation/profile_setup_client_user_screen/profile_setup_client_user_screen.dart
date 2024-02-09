@@ -1,3 +1,5 @@
+import '../edit_profile_picture_popup_dialog/controller/edit_profile_picture_popup_controller.dart';
+import '../edit_profile_picture_popup_dialog/edit_profile_picture_popup_dialog.dart';
 import 'controller/profile_setup_client_user_controller.dart';
 import 'package:empylo/core/app_export.dart';
 import 'package:empylo/core/utils/validation_functions.dart';
@@ -53,6 +55,9 @@ class ProfileSetupClientUserScreen
                                     CustomIconButton(
                                         height: 36.adaptSize,
                                         width: 36.adaptSize,
+                                        onTap: () {
+                                          onTapBtnUser();
+                                        },
                                         padding: EdgeInsets.all(10.h),
                                         decoration:
                                             IconButtonStyleHelper.fillTeal,
@@ -286,6 +291,20 @@ class ProfileSetupClientUserScreen
                       },
                       contentPadding: EdgeInsets.all(13.h))))
         ]));
+  }
+
+  /// Displays a dialog with the [EditProfilePicturePopupDialog] content.
+  onTapBtnUser() {
+    Get.dialog(AlertDialog(
+      backgroundColor: Colors.transparent,
+      contentPadding: EdgeInsets.zero,
+      insetPadding: const EdgeInsets.only(left: 0),
+      content: EditProfilePicturePopupDialog(
+        Get.put(
+          EditProfilePicturePopupController(),
+        ),
+      ),
+    ));
   }
 
   /// Navigates to the previous screen.
