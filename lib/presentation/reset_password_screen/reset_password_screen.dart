@@ -1,11 +1,13 @@
-import 'controller/reset_password_controller.dart';
+import 'package:flutter/material.dart';
 import 'package:empylo/core/app_export.dart';
 import 'package:empylo/core/utils/validation_functions.dart';
 import 'package:empylo/widgets/app_bar/appbar_leading_iconbutton.dart';
 import 'package:empylo/widgets/app_bar/custom_app_bar.dart';
 import 'package:empylo/widgets/custom_elevated_button.dart';
 import 'package:empylo/widgets/custom_text_form_field.dart';
-import 'package:flutter/material.dart';
+import 'controller/reset_password_controller.dart';
+import 'package:empylo/data/models/resetPassword/post_reset_password_req.dart';
+import 'package:empylo/data/models/resetPassword/post_reset_password_resp.dart';
 
 // ignore_for_file: must_be_immutable
 class ResetPasswordScreen extends GetWidget<ResetPasswordController> {
@@ -201,10 +203,34 @@ class ResetPasswordScreen extends GetWidget<ResetPasswordController> {
     Get.back();
   }
 
-  /// Navigates to the resetSuccessfulScreen when the action is triggered.
-  onTapResetPassword() {
-    Get.toNamed(
-      AppRoutes.resetSuccessfulScreen,
-    );
+  /// calls the [https://empylo-app.vercel.app/auth/user/reset-password] API
+  ///
+  /// validates the form input fields and executes the API if all the fields are valid
+  /// It has [PostResetPasswordReq] as a parameter which will be passed as a API request body
+  /// If the call is successful, the function calls the `_onResetPasswordSuccess()` function.
+  /// If the call fails, the function calls the `_onResetPasswordError()` function.
+  ///
+  /// Throws a `NoInternetException` if there is no internet connection.
+  Future<void> onTapResetPassword() async {
+    if (_formKey.currentState!.validate()) {
+      PostResetPasswordReq postResetPasswordReq = PostResetPasswordReq(
+        newPassword: controller.passwordController.text,
+      );
+      try {
+        await controller.callResetPassword(
+          postResetPasswordReq.toJson(),
+        );
+        _onResetPasswordSuccess();
+      } on PostResetPasswordResp {
+        _onResetPasswordError();
+      } on NoInternetException catch (e) {
+        Get.rawSnackbar(message: e.toString());
+      } catch (e) {
+        //TODO: Handle generic errors
+      }
+    }
   }
+
+  void _onResetPasswordSuccess() {}
+  void _onResetPasswordError() {}
 }
