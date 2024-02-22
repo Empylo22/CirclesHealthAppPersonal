@@ -8,7 +8,9 @@ import 'package:empylo/data/models/verifyUserAuth/post_verify_user_auth_resp.dar
 
 class ApiClient extends GetConnect {
   var url = "https://empylo-app.vercel.app";
-
+  // Extracting id from the accessToken
+String userId = extractUserId(postLoginUserResp.data!.accessToken ?? '');
+  
   @override
   void onInit() {
     super.onInit();
@@ -29,7 +31,41 @@ class ApiClient extends GetConnect {
   bool _isSuccessCall(Response response) {
     return response.isOk;
   }
-
+/// Performs API call for https://empylo-app.vercel.app/auth/user/reset-password
+  ///
+  /// Sends a POST request to the server's 'https://empylo-app.vercel.app/auth/{id}/update-signup-profile' endpoint
+  /// with the provided headers and request data
+  /// Returns a [PostUpdateSignUpProfileResp] object representing the response.
+  /// Throws an error if the request fails or an exception occurs.
+  Future<PostUpdateSignUpProfileResp> updateSignupProfile({
+    Map<String, String> headers = const {},
+    Map requestData = const {},
+  }) async {
+    ProgressDialogUtils.showProgressDialog();
+    try {
+      await isNetworkConnected();
+      Response response = await httpClient.post(
+        '$url/auth/$userId/update-signup-profile',
+        headers: headers,
+        body: requestData,
+      );
+      ProgressDialogUtils.hideProgressDialog();
+      if (_isSuccessCall(response)) {
+        return PostResetPasswordResp.fromJson(response.body);
+      } else {
+        throw response.body != null
+            ? PostResetPasswordResp.fromJson(response.body)
+            : 'Something Went Wrong!';
+      }
+    } catch (error, stackTrace) {
+      ProgressDialogUtils.hideProgressDialog();
+      Logger.log(
+        error,
+        stackTrace: stackTrace,
+      );
+      rethrow;
+    }
+  }
   /// Performs API call for https://empylo-app.vercel.app/auth/user/reset-password
   ///
   /// Sends a POST request to the server's 'https://empylo-app.vercel.app/auth/user/reset-password' endpoint
