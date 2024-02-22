@@ -1,11 +1,13 @@
-import 'controller/forgot_password_controller.dart';
+import 'package:flutter/material.dart';
 import 'package:empylo/core/app_export.dart';
 import 'package:empylo/core/utils/validation_functions.dart';
 import 'package:empylo/widgets/app_bar/appbar_leading_iconbutton.dart';
 import 'package:empylo/widgets/app_bar/custom_app_bar.dart';
 import 'package:empylo/widgets/custom_elevated_button.dart';
 import 'package:empylo/widgets/custom_text_form_field.dart';
-import 'package:flutter/material.dart';
+import 'controller/forgot_password_controller.dart';
+import 'package:empylo/data/models/forgotPasswordPost/post_forgot_password_post_req.dart';
+import 'package:empylo/data/models/forgotPasswordPost/post_forgot_password_post_resp.dart';
 
 // ignore_for_file: must_be_immutable
 class ForgotPasswordScreen extends GetWidget<ForgotPasswordController> {
@@ -113,10 +115,35 @@ class ForgotPasswordScreen extends GetWidget<ForgotPasswordController> {
     Get.back();
   }
 
-  /// Navigates to the resetCodePopupScreen when the action is triggered.
-  onTapResetPassword() {
-    Get.toNamed(
-      AppRoutes.resetCodePopupScreen,
-    );
+  /// calls the [https://empylo-app.vercel.app/auth/user/forgot-password] API
+  ///
+  /// validates the form input fields and executes the API if all the fields are valid
+  /// It has [PostForgotPasswordPostReq] as a parameter which will be passed as a API request body
+  /// If the call is successful, the function calls the `_onForgotPasswordSuccess()` function.
+  /// If the call fails, the function calls the `_onForgotPasswordError()` function.
+  ///
+  /// Throws a `NoInternetException` if there is no internet connection.
+  Future<void> onTapResetPassword() async {
+    if (_formKey.currentState!.validate()) {
+      PostForgotPasswordPostReq postForgotPasswordPostReq =
+          PostForgotPasswordPostReq(
+        email: controller.passwordController.text,
+      );
+      try {
+        await controller.callForgotPasswordPost(
+          postForgotPasswordPostReq.toJson(),
+        );
+        _onForgotPasswordSuccess();
+      } on PostForgotPasswordPostResp {
+        _onForgotPasswordError();
+      } on NoInternetException catch (e) {
+        Get.rawSnackbar(message: e.toString());
+      } catch (e) {
+        //TODO: Handle generic errors
+      }
+    }
   }
+
+  void _onForgotPasswordSuccess() {}
+  void _onForgotPasswordError() {}
 }
