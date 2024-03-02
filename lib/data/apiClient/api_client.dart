@@ -4,13 +4,12 @@ import 'package:empylo/data/models/forgotPasswordPost/post_forgot_password_post_
 import 'package:empylo/data/models/loginUser/post_login_user_resp.dart';
 import 'package:empylo/data/models/resetPassword/post_reset_password_resp.dart';
 import 'package:empylo/data/models/signupUser/post_signup_user_resp.dart';
+import 'package:empylo/data/models/updateSignupProfile/post_update_signup_profile_resp.dart';
 import 'package:empylo/data/models/verifyUserAuth/post_verify_user_auth_resp.dart';
 
 class ApiClient extends GetConnect {
   var url = "https://empylo-app.vercel.app";
-  // Extracting id from the accessToken
-String userId = extractUserId(postLoginUserResp.data!.accessToken ?? '');
-  
+
   @override
   void onInit() {
     super.onInit();
@@ -31,13 +30,14 @@ String userId = extractUserId(postLoginUserResp.data!.accessToken ?? '');
   bool _isSuccessCall(Response response) {
     return response.isOk;
   }
-/// Performs API call for https://empylo-app.vercel.app/auth/user/reset-password
+
+  /// Performs API call for https://empylo-app.vercel.app/auth/id/update-signup-profile
   ///
-  /// Sends a POST request to the server's 'https://empylo-app.vercel.app/auth/{id}/update-signup-profile' endpoint
+  /// Sends a POST request to the server's 'https://empylo-app.vercel.app/auth/id/update-signup-profile' endpoint
   /// with the provided headers and request data
-  /// Returns a [PostUpdateSignUpProfileResp] object representing the response.
+  /// Returns a [PostUpdateSignupProfileResp] object representing the response.
   /// Throws an error if the request fails or an exception occurs.
-  Future<PostUpdateSignUpProfileResp> updateSignupProfile({
+  Future<PostUpdateSignupProfileResp> updateSignupProfile({
     Map<String, String> headers = const {},
     Map requestData = const {},
   }) async {
@@ -45,16 +45,16 @@ String userId = extractUserId(postLoginUserResp.data!.accessToken ?? '');
     try {
       await isNetworkConnected();
       Response response = await httpClient.post(
-        '$url/auth/$userId/update-signup-profile',
+        '$url/auth/id/update-signup-profile',
         headers: headers,
         body: requestData,
       );
       ProgressDialogUtils.hideProgressDialog();
       if (_isSuccessCall(response)) {
-        return PostResetPasswordResp.fromJson(response.body);
+        return PostUpdateSignupProfileResp.fromJson(response.body);
       } else {
         throw response.body != null
-            ? PostResetPasswordResp.fromJson(response.body)
+            ? PostUpdateSignupProfileResp.fromJson(response.body)
             : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
@@ -66,6 +66,7 @@ String userId = extractUserId(postLoginUserResp.data!.accessToken ?? '');
       rethrow;
     }
   }
+
   /// Performs API call for https://empylo-app.vercel.app/auth/user/reset-password
   ///
   /// Sends a POST request to the server's 'https://empylo-app.vercel.app/auth/user/reset-password' endpoint
