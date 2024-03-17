@@ -1,3 +1,5 @@
+import 'package:empylo/presentation/profile_account_page/profile_account_page.dart';
+
 import 'controller/profile_personal_user_my_circles_tab_container_controller.dart';
 import 'package:empylo/core/app_export.dart';
 import 'package:empylo/presentation/chat_page/chat_page.dart';
@@ -10,6 +12,8 @@ import 'package:empylo/widgets/app_bar/custom_app_bar.dart';
 import 'package:empylo/widgets/custom_bottom_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+//ProfilePersonalUserMyCirclesTabContainerScreen
+//ProfilePersonalUserMyCirclesTabContainerController
 
 class ProfilePersonalUserMyCirclesTabContainerScreen
     extends GetWidget<ProfilePersonalUserMyCirclesTabContainerController> {
@@ -20,35 +24,36 @@ class ProfilePersonalUserMyCirclesTabContainerScreen
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-            body: SizedBox(
-                width: 391.h,
-                child: Column(children: [
-                  SizedBox(height: 13.v),
-                  _buildTablerStack(),
-                  SizedBox(height: 3.v),
-                  Expanded(
-                      child: SingleChildScrollView(
-                          child: Column(children: [
-                    Text("lbl_jane".tr, style: theme.textTheme.titleLarge),
-                    SizedBox(height: 4.v),
-                    Text("msg_janedoe_gmail_com".tr,
-                        style: theme.textTheme.bodyMedium),
-                    SizedBox(height: 1.v),
-                    Text("lbl_personal_user2".tr,
-                        style: CustomTextStyles.bodySmallTeal600),
-                    SizedBox(height: 17.v),
-                    _buildTabview(),
-                    SizedBox(
-                        height: 584.v,
-                        child: TabBarView(
-                            controller: controller.tabviewController,
-                            children: [
-                              ProfilePersonalUserMyCirclesPage(),
-                              ProfilePersonalUserMyCirclesPage()
-                            ]))
-                  ])))
-                ])),
-            bottomNavigationBar: _buildBottomBar()));
+      body: SizedBox(
+          width: 391.h,
+          child: Column(children: [
+            SizedBox(height: 13.v),
+            _buildTablerStack(),
+            SizedBox(height: 3.v),
+            Expanded(
+                child: SingleChildScrollView(
+                    child: Column(children: [
+              Text("lbl_jane".tr, style: theme.textTheme.titleLarge),
+              SizedBox(height: 4.v),
+              Text("msg_janedoe_gmail_com".tr,
+                  style: theme.textTheme.bodyMedium),
+              SizedBox(height: 1.v),
+              Text("lbl_personal_user2".tr,
+                  style: CustomTextStyles.bodySmallTeal600),
+              SizedBox(height: 17.v),
+              _buildTabview(),
+              SizedBox(
+                  height: 584.v,
+                  child: TabBarView(
+                      controller: controller.tabviewController,
+                      children: [
+                        ProfilePersonalUserMyCirclesPage(),
+                        ProfileAccountPage()
+                      ]))
+            ])))
+          ])),
+      //bottomNavigationBar: _buildBottomBar()
+    ));
   }
 
   /// Section Widget
@@ -119,45 +124,45 @@ class ProfilePersonalUserMyCirclesTabContainerScreen
   }
 
   /// Section Widget
-  Widget _buildBottomBar() {
-    return CustomBottomBar(onChanged: (BottomBarEnum type) {
-      Get.toNamed(getCurrentRoute(type), id: 1);
-    });
-  }
+  // Widget _buildBottomBar() {
+  //   return CustomBottomBar(onChanged: (BottomBarEnum type) {
+  //     Get.toNamed(getCurrentRoute(type), id: 1);
+  //   });
+  // }
 
-  ///Handling route based on bottom click actions
-  String getCurrentRoute(BottomBarEnum type) {
-    switch (type) {
-      case BottomBarEnum.Home:
-        return AppRoutes.homePersonalUserPage;
-      case BottomBarEnum.Explore:
-        return AppRoutes.exploreGroupActivitiesTabContainerPage;
-      case BottomBarEnum.Chat:
-        return AppRoutes.chatPage;
-      case BottomBarEnum.Profile:
-        return AppRoutes.subscriptionPage;
-      default:
-        return "/";
-    }
-  }
+  // ///Handling route based on bottom click actions
+  // String getCurrentRoute(BottomBarEnum type) {
+  //   switch (type) {
+  //     case BottomBarEnum.Home:
+  //       return AppRoutes.homePersonalUserPage;
+  //     case BottomBarEnum.Explore:
+  //       return AppRoutes.exploreGroupActivitiesTabContainerPage;
+  //     case BottomBarEnum.Chat:
+  //       return AppRoutes.chatPage;
+  //     case BottomBarEnum.Profile:
+  //       return AppRoutes.subscriptionPage;
+  //     default:
+  //       return "/";
+  //   }
+  // }
 
-  ///Handling page based on route
-  Widget getCurrentPage(String currentRoute) {
-    switch (currentRoute) {
-      case AppRoutes.homePersonalUserPage:
-        return HomePersonalUserPage();
-      case AppRoutes.exploreGroupActivitiesTabContainerPage:
-        return ExploreGroupActivitiesTabContainerPage();
-      case AppRoutes.chatPage:
-        return ChatPage();
-      case AppRoutes.subscriptionPage:
-        return SubscriptionPage();
-      default:
-        return DefaultWidget();
-    }
-  }
+  // ///Handling page based on route
+  // Widget getCurrentPage(String currentRoute) {
+  //   switch (currentRoute) {
+  //     case AppRoutes.homePersonalUserPage:
+  //       return HomePersonalUserPage();
+  //     case AppRoutes.exploreGroupActivitiesTabContainerPage:
+  //       return ExploreGroupActivitiesTabContainerPage();
+  //     case AppRoutes.chatPage:
+  //       return ChatPage();
+  //     case AppRoutes.subscriptionPage:
+  //       return SubscriptionPage();
+  //     default:
+  //       return DefaultWidget();
+  //   }
+  // }
 
-  /// Navigates to the previous screen.
+  // /// Navigates to the previous screen.
   onTapArrowLeft() {
     Get.back();
   }

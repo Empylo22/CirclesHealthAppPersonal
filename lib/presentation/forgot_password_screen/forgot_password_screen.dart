@@ -144,6 +144,22 @@ class ForgotPasswordScreen extends GetWidget<ForgotPasswordController> {
     }
   }
 
-  void _onForgotPasswordSuccess() {}
-  void _onForgotPasswordError() {}
+  void _onForgotPasswordSuccess() {
+    Get.rawSnackbar(message: "An OTP has been sent to your mail");
+    Get.toNamed(AppRoutes.resetCodePopupScreen);
+  }
+
+  void _onForgotPasswordError() {
+    PostForgotPasswordPostResp postForgotPasswordPostResp =
+        PostForgotPasswordPostResp();
+
+    if (postForgotPasswordPostResp.statusCode == 404) {
+      Get.rawSnackbar(message: "Email not found. Please enter a valid email.");
+    } else if (postForgotPasswordPostResp.statusCode == 400) {
+      Get.rawSnackbar(message: "Invalid request. Please check your email.");
+    } else if (postForgotPasswordPostResp.statusCode == 500) {
+      Get.rawSnackbar(message: postForgotPasswordPostResp.message);
+    }
+    //Get.rawSnackbar(message: "Invalid Email, please enter an existing email");
+  }
 }

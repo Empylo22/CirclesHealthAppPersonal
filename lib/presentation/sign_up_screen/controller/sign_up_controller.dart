@@ -22,14 +22,39 @@ PostSignupUserResp postSignupUserResp = PostSignupUserResp();
 /// Calls the https://empylo-app.vercel.app/auth/user/signup API with the specified request data.
 ///
 /// The [Map] parameter represents request body
-Future<void> callSignupUser(Map req) async  { try{
-postSignupUserResp   =  await Get.find<ApiClient>().signupUser(headers: {'Content-type': 'application/json',}, requestData: req, );
-_handleSignupUserSuccess();
-} on PostSignupUserResp catch(e)
-{
-postSignupUserResp = e;
-rethrow;
-} } 
+Future<void> callSignupUser() async {
+
+  try {
+
+    final req = {
+
+      'email': emailController.text,
+
+      'password': passwordController.text,
+
+      'termsConditions': iAgreeToTheTermsAndPrivacy.value,
+
+    };
+
+    await Get.find<ApiClient>().signupUser(
+
+      headers: {'Content-type': 'application/json'},
+
+      requestData: req,
+
+    );
+
+    _handleSignupUserSuccess();
+
+  } catch (e) {
+
+
+
+    rethrow;
+
+  }
+
+}
 /// handles the success response for the API
 void _handleSignupUserSuccess() { 
 

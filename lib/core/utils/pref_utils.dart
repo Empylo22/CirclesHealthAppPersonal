@@ -1,4 +1,4 @@
-//ignore: unused_import
+//ignore: unused_import    
 import 'dart:convert';
 import 'dart:ui';
 import 'package:flutter/scheduler.dart';
@@ -36,3 +36,4 @@ class PrefUtils {
     }
   }
 }
+    

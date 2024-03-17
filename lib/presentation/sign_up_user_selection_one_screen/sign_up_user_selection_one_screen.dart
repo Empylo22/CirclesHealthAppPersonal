@@ -1,3 +1,4 @@
+import '../../data/models/updateSignUpProfile/post_update_signup_req.dart';
 import 'controller/sign_up_user_selection_one_controller.dart';
 import 'package:empylo/core/app_export.dart';
 import 'package:empylo/widgets/custom_elevated_button.dart';
@@ -26,7 +27,8 @@ class SignUpUserSelectionOneScreen
                       style: CustomTextStyles.bodyMediumOnPrimaryRegular),
                   SizedBox(height: 20.v),
                   GestureDetector(
-                    onTap: () {
+                    onTap: () async {
+                      controller.updateUserType('clientUser');
                       Get.toNamed(AppRoutes.signUpUserSelectionScreen);
                     },
                     child: CustomIconButton(

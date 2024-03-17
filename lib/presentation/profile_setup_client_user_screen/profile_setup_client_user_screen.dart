@@ -1,15 +1,15 @@
-import 'package:empylo/widgets/app_bar/custom_app_bar.dart';
-import 'package:empylo/widgets/app_bar/appbar_leading_iconbutton.dart';
-import 'package:empylo/widgets/custom_icon_button.dart';
+import '../edit_profile_picture_popup_dialog/controller/edit_profile_picture_popup_controller.dart';
+import '../edit_profile_picture_popup_dialog/edit_profile_picture_popup_dialog.dart';
+import 'controller/profile_setup_client_user_controller.dart';
+import 'package:empylo/core/app_export.dart';
 import 'package:empylo/core/utils/validation_functions.dart';
-import 'package:empylo/widgets/custom_text_form_field.dart';
+import 'package:empylo/widgets/app_bar/appbar_leading_iconbutton.dart';
+import 'package:empylo/widgets/app_bar/custom_app_bar.dart';
 import 'package:empylo/widgets/custom_drop_down.dart';
 import 'package:empylo/widgets/custom_elevated_button.dart';
+import 'package:empylo/widgets/custom_icon_button.dart';
+import 'package:empylo/widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
-import 'package:empylo/core/app_export.dart';
-import 'controller/profile_setup_client_user_controller.dart';
-import 'package:empylo/data/models/updateSignupProfile/post_update_signup_profile_req.dart';
-import 'package:empylo/data/models/updateSignupProfile/post_update_signup_profile_resp.dart';
 
 // ignore_for_file: must_be_immutable
 class ProfileSetupClientUserScreen
@@ -55,6 +55,9 @@ class ProfileSetupClientUserScreen
                                     CustomIconButton(
                                         height: 36.adaptSize,
                                         width: 36.adaptSize,
+                                        onTap: () {
+                                          onTapBtnUser();
+                                        },
                                         padding: EdgeInsets.all(10.h),
                                         decoration:
                                             IconButtonStyleHelper.fillTeal,
@@ -70,7 +73,7 @@ class ProfileSetupClientUserScreen
                                   child: Text("lbl_name".tr,
                                       style: theme.textTheme.labelLarge))),
                           SizedBox(height: 3.v),
-                          _buildProfileSetupFrame(),
+                          _buildFrame(),
                           SizedBox(height: 17.v),
                           Align(
                               alignment: Alignment.centerLeft,
@@ -89,7 +92,7 @@ class ProfileSetupClientUserScreen
                                       width: 32.adaptSize)),
                               hintText: "lbl_select".tr,
                               items: controller.profileSetupClientUserModelObj
-                                  .value.dropdownItemList!.value,
+                                  .value.dropdownItemList.value,
                               onChanged: (value) {
                                 controller.onSelected(value);
                               }),
@@ -111,7 +114,7 @@ class ProfileSetupClientUserScreen
                                       width: 32.adaptSize)),
                               hintText: "lbl_select".tr,
                               items: controller.profileSetupClientUserModelObj
-                                  .value.dropdownItemList1!.value,
+                                  .value.dropdownItemList1.value,
                               onChanged: (value) {
                                 controller.onSelected1(value);
                               }),
@@ -133,7 +136,7 @@ class ProfileSetupClientUserScreen
                                       width: 32.adaptSize)),
                               hintText: "lbl_select".tr,
                               items: controller.profileSetupClientUserModelObj
-                                  .value.dropdownItemList2!.value,
+                                  .value.dropdownItemList2.value,
                               onChanged: (value) {
                                 controller.onSelected2(value);
                               }),
@@ -155,7 +158,7 @@ class ProfileSetupClientUserScreen
                                       width: 32.adaptSize)),
                               hintText: "lbl_select".tr,
                               items: controller.profileSetupClientUserModelObj
-                                  .value.dropdownItemList3!.value,
+                                  .value.dropdownItemList3.value,
                               onChanged: (value) {
                                 controller.onSelected3(value);
                               }),
@@ -177,7 +180,7 @@ class ProfileSetupClientUserScreen
                                       width: 32.adaptSize)),
                               hintText: "lbl_select".tr,
                               items: controller.profileSetupClientUserModelObj
-                                  .value.dropdownItemList4!.value,
+                                  .value.dropdownItemList4.value,
                               onChanged: (value) {
                                 controller.onSelected4(value);
                               }),
@@ -199,7 +202,7 @@ class ProfileSetupClientUserScreen
                                       width: 32.adaptSize)),
                               hintText: "lbl_select".tr,
                               items: controller.profileSetupClientUserModelObj
-                                  .value.dropdownItemList5!.value,
+                                  .value.dropdownItemList5.value,
                               onChanged: (value) {
                                 controller.onSelected5(value);
                               }),
@@ -221,7 +224,7 @@ class ProfileSetupClientUserScreen
                                       width: 32.adaptSize)),
                               hintText: "lbl_select".tr,
                               items: controller.profileSetupClientUserModelObj
-                                  .value.dropdownItemList6!.value,
+                                  .value.dropdownItemList6.value,
                               onChanged: (value) {
                                 controller.onSelected6(value);
                               }),
@@ -253,7 +256,7 @@ class ProfileSetupClientUserScreen
   }
 
   /// Section Widget
-  Widget _buildProfileSetupFrame() {
+  Widget _buildFrame() {
     return Padding(
         padding: EdgeInsets.only(left: 1.h),
         child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
@@ -290,41 +293,29 @@ class ProfileSetupClientUserScreen
         ]));
   }
 
+  /// Displays a dialog with the [EditProfilePicturePopupDialog] content.
+  onTapBtnUser() {
+    Get.dialog(AlertDialog(
+      backgroundColor: Colors.transparent,
+      contentPadding: EdgeInsets.zero,
+      insetPadding: const EdgeInsets.only(left: 0),
+      content: EditProfilePicturePopupDialog(
+        Get.put(
+          EditProfilePicturePopupController(),
+        ),
+      ),
+    ));
+  }
+
   /// Navigates to the previous screen.
   onTapArrowLeft() {
     Get.back();
   }
 
-  /// calls the [https://empylo-app.vercel.app/auth/id/update-signup-profile] API
-  ///
-  /// validates the form input fields and executes the API if all the fields are valid
-  /// It has [PostUpdateSignupProfileReq] as a parameter which will be passed as a API request body
-  /// If the call is successful, the function calls the `_onUpdateSignUpProfileSuccess()` function.
-  /// If the call fails, the function calls the `_onUpdateSignUpProfileError()` function.
-  ///
-  /// Throws a `NoInternetException` if there is no internet connection.
-  Future<void> onTapSaveContinue() async {
-    if (_formKey.currentState!.validate()) {
-      PostUpdateSignupProfileReq postUpdateSignupProfileReq =
-          PostUpdateSignupProfileReq(
-        firstName: controller.nameController.text,
-        lastName: controller.lastNameController.text,
-      );
-      try {
-        await controller.callUpdateSignupProfile(
-          postUpdateSignupProfileReq.toJson(),
-        );
-        _onUpdateSignUpProfileSuccess();
-      } on PostUpdateSignupProfileResp {
-        _onUpdateSignUpProfileError();
-      } on NoInternetException catch (e) {
-        Get.rawSnackbar(message: e.toString());
-      } catch (e) {
-        //TODO: Handle generic errors
-      }
-    }
+  /// Navigates to the dailyAssessmentDefaultScreen when the action is triggered.
+  onTapSaveContinue() {
+    // Get.toNamed(
+    //   AppRoutes.dailyAssessmentDefaultScreen,
+    // );
   }
-
-  void _onUpdateSignUpProfileSuccess() {}
-  void _onUpdateSignUpProfileError() {}
 }

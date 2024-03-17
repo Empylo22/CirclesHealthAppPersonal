@@ -151,6 +151,9 @@ class CustomTextStyles {
   static get labelLargeBlack900 => theme.textTheme.labelLarge!.copyWith(
         color: appTheme.black900,
       );
+  static get labelLargeErrorContainer => theme.textTheme.labelLarge!.copyWith(
+        color: theme.colorScheme.errorContainer,
+      );
   static get labelLargeLibreBaskervilleff000000 =>
       theme.textTheme.labelLarge!.libreBaskerville.copyWith(
         color: Color(0XFF000000),
@@ -214,6 +217,11 @@ class CustomTextStyles {
   static get titleLargeSwitzerVariableOnPrimary =>
       theme.textTheme.titleLarge!.switzerVariable.copyWith(
         color: theme.colorScheme.onPrimary,
+        fontWeight: FontWeight.w600,
+      );
+  static get titleLargeSwitzerVariableWhiteA700 =>
+      theme.textTheme.titleLarge!.switzerVariable.copyWith(
+        color: appTheme.whiteA700,
         fontWeight: FontWeight.w600,
       );
   static get titleLargeSwitzerVariable_1 =>
@@ -283,13 +291,20 @@ class CustomTextStyles {
   static get titleSmallPrimary => theme.textTheme.titleSmall!.copyWith(
         color: theme.colorScheme.primary,
       );
-  static get titleSmallSwitzerVariable =>
-      theme.textTheme.titleSmall!.switzerVariable.copyWith(
-        fontWeight: FontWeight.w600,
+  static get titleSmallSecondaryContainer =>
+      theme.textTheme.titleSmall!.copyWith(
+        color: theme.colorScheme.secondaryContainer,
       );
+  static get titleSmallSwitzerVariable =>
+      theme.textTheme.titleSmall!.switzerVariable;
   static get titleSmallSwitzerVariable15 =>
       theme.textTheme.titleSmall!.switzerVariable.copyWith(
         fontSize: 15.fSize,
+      );
+  static get titleSmallSwitzerVariableErrorContainer =>
+      theme.textTheme.titleSmall!.switzerVariable.copyWith(
+        color: theme.colorScheme.errorContainer,
+        fontWeight: FontWeight.w600,
       );
   static get titleSmallSwitzerVariableGray80002 =>
       theme.textTheme.titleSmall!.switzerVariable.copyWith(
@@ -310,6 +325,10 @@ class CustomTextStyles {
       theme.textTheme.titleSmall!.switzerVariable.copyWith(
         color: theme.colorScheme.secondaryContainer,
       );
+  static get titleSmallSwitzerVariableSemiBold =>
+      theme.textTheme.titleSmall!.switzerVariable.copyWith(
+        fontWeight: FontWeight.w600,
+      );
   static get titleSmallSwitzerVariableWhiteA700 =>
       theme.textTheme.titleSmall!.switzerVariable.copyWith(
         color: appTheme.whiteA700,
@@ -320,7 +339,15 @@ class CustomTextStyles {
   static get titleSmallSwitzerVariableff00a99d =>
       theme.textTheme.titleSmall!.switzerVariable.copyWith(
         color: Color(0XFF00A99D),
+      );
+  static get titleSmallSwitzerVariableff00a99dSemiBold =>
+      theme.textTheme.titleSmall!.switzerVariable.copyWith(
+        color: Color(0XFF00A99D),
         fontWeight: FontWeight.w600,
+      );
+  static get titleSmallSwitzerVariableff191919 =>
+      theme.textTheme.titleSmall!.switzerVariable.copyWith(
+        color: Color(0XFF191919),
       );
   static get titleSmallWhiteA700 => theme.textTheme.titleSmall!.copyWith(
         color: appTheme.whiteA700,

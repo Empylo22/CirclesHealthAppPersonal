@@ -4,6 +4,9 @@ import 'package:empylo/presentation/onboarding_screen/onboarding_screen.dart';
 import 'package:empylo/presentation/onboarding_screen/binding/onboarding_binding.dart';
 import 'package:empylo/presentation/sign_in_screen/sign_in_screen.dart';
 import 'package:empylo/presentation/sign_in_screen/binding/sign_in_binding.dart';
+import 'package:empylo/presentation/sign_in_verifiction_screen/sign_in_verifiction_screen.dart';
+
+import 'package:empylo/presentation/sign_in_verifiction_screen/binding/sign_in_verifiction_binding.dart';
 import 'package:empylo/presentation/sign_up_screen/sign_up_screen.dart';
 import 'package:empylo/presentation/sign_up_screen/binding/sign_up_binding.dart';
 import 'package:empylo/presentation/sign_up_user_selection_screen/sign_up_user_selection_screen.dart';
@@ -102,6 +105,7 @@ class AppRoutes {
   static const String onboardingScreen = '/onboarding_screen';
 
   static const String signInScreen = '/sign_in_screen';
+  static const String signInVerifictionScreen = '/sign_in_verifiction_screen';
 
   static const String signUpScreen = '/sign_up_screen';
 
@@ -262,6 +266,13 @@ class AppRoutes {
       page: () => SignInScreen(),
       bindings: [
         SignInBinding(),
+      ],
+    ),
+    GetPage(
+      name: signInVerifictionScreen,
+      page: () => SignInVerifictionScreen(),
+      bindings: [
+        SignInVerifictionBinding(),
       ],
     ),
     GetPage(
@@ -581,9 +592,9 @@ class AppRoutes {
     ),
     GetPage(
       name: initialRoute,
-      page: () => SplashScreen(),
+      page: () => SignInScreen(),
       bindings: [
-        SplashBinding(),
+        SignInBinding(),
       ],
     )
   ];

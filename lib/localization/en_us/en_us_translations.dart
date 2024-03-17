@@ -11,6 +11,15 @@ final Map<String, String> enUs = {
   "msg_don_t_have_an_account": "Don’t have an account? Sign Up.",
   "msg_don_t_have_an_account2": "Don’t have an account? ",
 
+  // Sign in verifiction Screen
+  "lbl2": ".",
+  "msg_enter_your_verification": "Enter Your Verification Code",
+  "msg_jane_gmail_com": "jane******@gmail.com",
+  "msg_we_sent_a_four_digit":
+      "We sent a four digit verification code to your email jane******@gmail.com.",
+  "msg_we_sent_a_four_digit2":
+      "We sent a four digit verification code to your email ",
+
   // Sign up Screen
   "lbl_sign_up2": "Sign Up ",
   "lbl_sign_up3": "Sign up",
@@ -79,7 +88,7 @@ final Map<String, String> enUs = {
   "msg_i_ve_been_thinking": "“I’ve been thinking clearly”",
   "msg_in_the_past_week": "In the past week...",
 
-  // Home (personal user)  Screen
+  // Home (personal user) - Container Screen
   "lbl_79": "79",
   "lbl_circles": "Circles",
   "lbl_hi_jane": "Hi, Jane!",
@@ -105,7 +114,6 @@ final Map<String, String> enUs = {
   "msg_improve_your_self_awareness": "Improve your\nself-awareness",
 
   // Recommended activities Screen
-  "lbl_complete": "Complete!",
   "lbl_sleep_hygiene2": "Sleep Hygiene",
   "msg_lorem_ipsum_dolor3":
       "Lorem ipsum dolor sit amet consectetur. Proin cursus maecenas bibendum senectus aliquet cras id placerat fermentum. Sed morbi in augue nibh ultricies facilisis massa in. Id auctor aliquam ut nibh vulputate rhoncus pharetra in. Vitae vitae et augue sed massa hendrerit. Aliquam cursus pharetra morbi a in. Consectetur tortor integer eu proin pellentesque et elementum risus. Facilisi risus libero quis duis. Placerat justo morbi consectetur montes dictum convallis.\n\nAliquet eu nisl quam aliquam accumsan risus lorem maecenas. Tincidunt cras diam diam metus eu nam. Vehicula blandit velit pulvinar velit viverra urna pellentesque. Nec lorem cursus quam platea. Fusce elit nulla praesent arcu velit. Tristique sagittis duis enim diam ullamcorper. Tempor montes sed nec aliquet volutpat velit. Ultrices amet pulvinar eget aliquet egestas tincidunt id scelerisque congue. A tellus mauris ullamcorper suspendisse elementum. Duis auctor sapien phasellus ac amet et augue justo dui. Ante cursus in tristique et. \n\nFringilla cursus urna turpis enim sit quisque. Donec consequat cras tincidunt adipiscing consectetur.\nTincidunt duis eu nec in sit in magna tristique. Convallis orci tristique turpis aenean vestibulum. ",
@@ -150,6 +158,12 @@ final Map<String, String> enUs = {
   // 1 on 1 call Screen
   "lbl_1_59": "1:59",
 
+  // Daily assessment pop up Screen
+  "msg_your_daily_assessment": "Your Daily Assessment is\navailable now",
+
+  // Weekly assessment pop up Screen
+  "msg_your_weekly_assessment": "Your Weekly Assessment is\navailable now",
+
   // Client user Profile (My circles) Screen
   "msg_join_organisation": "Join Organisation",
 
@@ -161,7 +175,11 @@ final Map<String, String> enUs = {
   "msg_learning_sessions": "Learning sessions (2)",
   "msg_overall_progress": "Overall progress: 70%",
   "msg_overall_progress2": "Overall progress: 50%",
-  "msg_workplace_relationships": "Workplace relationships and interactions 1",
+
+  // Learning session Screen
+  "lbl_take_assessment": "Take assessment",
+  "msg_lorem_ipsum_dolor7":
+      "Lorem ipsum dolor sit amet consectetur. Proin cursus maecenas bibendum senectus aliquet cras id placerat fermentum. Sed morbi in augue nibh ultricies facilisis massa in. Id auctor aliquam ut nibh vulputate rhoncus pharetra in. Vitae vitae et augue sed massa hendrerit. Aliquam cursus pharetra morbi a in. Consectetur tortor integer eu proin pellentesque et elementum risus. Facilisi risus libero quis duis. Placerat justo morbi consectetur montes dictum convallis.\n\nAliquet eu nisl quam aliquam accumsan risus lorem maecenas. Tincidunt cras diam diam metus eu nam. Vehicula blandit velit pulvinar velit viverra urna pellentesque. Nec lorem cursus quam platea. Fusce elit nulla praesent arcu velit. Tristique sagittis duis enim diam ullamcorper. Tempor montes sed nec aliquet volutpat velit. Ultrices amet pulvinar eget aliquet egestas tincidunt id scelerisque congue. A tellus mauris ullamcorper suspendisse elementum. Duis auctor sapien phasellus ac amet et augue justo dui. Ante cursus in tristique et. \n\nFringilla cursus urna turpis enim sit quisque. Donec consequat cras tincidunt adipiscing consectetur.\nTincidunt duis eu nec in sit in magna tristique. Convallis orci tristique turpis aenean vestibulum. \n\nAliquet eu nisl quam aliquam accumsan risus lorem maecenas. Tincidunt cras diam diam metus eu nam. Vehicula blandit velit pulvinar velit viverra urna pellentesque. Nec lorem cursus quam platea. Fusce elit nulla praesent arcu velit. Tristique sagittis duis enim diam ullamcorper. Tempor montes sed nec aliquet volutpat velit. Ultrices amet pulvinar eget aliquet egestas tincidunt id scelerisque congue. A tellus mauris ullamcorper suspendisse elementum. Duis auctor sapien phasellus ac amet et augue justo dui. Ante cursus in tristique et. ",
 
   // Client User Overview Screen
   "lbl_completed2": "Completed!",
@@ -314,6 +332,9 @@ final Map<String, String> enUs = {
   "msg_you_have_successfully": "You have successfully set up your 2FA!",
 
   // Edit profile picture (popup) Screen
+  "lbl_use_avatar": "Use Avatar",
+  "lbl_take_photo": "Take Photo",
+  "lbl_choose_photo": "Choose Photo",
   "lbl_delete_photo": "Delete Photo",
 
   // Common String
@@ -342,6 +363,7 @@ final Map<String, String> enUs = {
   "lbl_circle_2": "Circle 2",
   "lbl_client_user": "Client User",
   "lbl_client_user2": "Client user",
+  "lbl_complete": "Complete!",
   "lbl_completed": "Completed",
   "lbl_continue": "Continue",
   "lbl_courage": "Courage",
@@ -356,6 +378,7 @@ final Map<String, String> enUs = {
   "lbl_home": "Home",
   "lbl_jane": "Jane",
   "lbl_jason": "Jason",
+  "lbl_later": "Later",
   "lbl_learn": "LEARN",
   "lbl_location": "Location",
   "lbl_love": "Love",
@@ -385,6 +408,7 @@ final Map<String, String> enUs = {
   "lbl_see_all": "see all",
   "lbl_sign_in": "Sign In.",
   "lbl_sign_up4": "Sign up ",
+  "lbl_take_now": "Take now",
   "lbl_thriving": "Thriving",
   "lbl_today": "Today",
   "lbl_verify": "Verify",
@@ -422,13 +446,14 @@ final Map<String, String> enUs = {
   "msg_share_invite_link": "Share Invite Link",
   "msg_stress_awareness": "Stress awareness",
   "msg_thursday_22_november": "Thursday, 22 November",
+  "msg_workplace_relationships": "Workplace relationships and interactions 1",
   "msg_workplace_relationships2": "Workplace relationships and interactions 2",
 
 // Network Error String
   "msg_network_err": "Network Error",
   "msg_something_went_wrong": "Something Went Wrong!",
 
-  // Validation Error String
+	// Validation Error String
   "err_msg_please_enter_valid_email": "Please enter valid email",
   "err_msg_please_enter_valid_password": "Please enter valid password",
   "err_msg_please_enter_valid_text": "Please enter valid text",

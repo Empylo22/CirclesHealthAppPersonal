@@ -1,3 +1,6 @@
+import 'package:empylo/data/models/updateSignUpProfile/post_update_signup_req.dart';
+import 'package:flutter/widgets.dart';
+
 import 'controller/sign_up_user_selection_controller.dart';
 import 'package:empylo/core/app_export.dart';
 import 'package:empylo/widgets/custom_elevated_button.dart';
@@ -41,7 +44,8 @@ class SignUpUserSelectionScreen
                       style: CustomTextStyles.titleSmallSwitzerVariablePrimary),
                   SizedBox(height: 31.v),
                   GestureDetector(
-                    onTap: () {
+                    onTap: () async {
+                      controller.updateUserType('personalUser');
                       Get.toNamed(AppRoutes.signUpUserSelectionOneScreen);
                     },
                     child: CustomIconButton(
@@ -54,8 +58,13 @@ class SignUpUserSelectionScreen
                             imagePath: ImageConstant.imgFluentPersonA)),
                   ),
                   SizedBox(height: 3.v),
-                  Text("lbl_client_user".tr,
-                      style: CustomTextStyles.bodySmallSecondaryContainer),
+                  GestureDetector(
+                    onTap: () {
+                      controller.updateUserType('clientUser');
+                    },
+                    child: Text("lbl_client_user".tr,
+                        style: CustomTextStyles.bodySmallSecondaryContainer),
+                  ),
                   SizedBox(height: 48.v),
                   CustomElevatedButton(
                       text: "lbl_continue".tr,

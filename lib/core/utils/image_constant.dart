@@ -193,6 +193,8 @@ class ImageConstant {
 
   // Edit profile picture (popup) images
   static String imgIonTrashOutline = '$imagePath/img_ion_trash_outline.svg';
+  static String imgBiCamera = '$imagePath/bi_camera.svg';
+  static String imgClarityPictureLine = '$imagePath/clarity_picture-line.svg';
 
   // Common images
   static String imgIntersect = '$imagePath/img_intersect.png';

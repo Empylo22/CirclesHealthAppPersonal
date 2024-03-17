@@ -1,8 +1,6 @@
-import '../../../core/app_export.dart';
-import '../models/profile_setup_client_user_model.dart';
+import 'package:empylo/core/app_export.dart';
+import 'package:empylo/presentation/profile_setup_client_user_screen/models/profile_setup_client_user_model.dart';
 import 'package:flutter/material.dart';
-import 'package:empylo/data/models/updateSignupProfile/post_update_signup_profile_resp.dart';
-import 'package:empylo/data/apiClient/api_client.dart';
 
 /// A controller class for the ProfileSetupClientUserScreen.
 ///
@@ -29,9 +27,6 @@ class ProfileSetupClientUserController extends GetxController {
   SelectionPopupModel? selectedDropDownValue5;
 
   SelectionPopupModel? selectedDropDownValue6;
-
-  PostUpdateSignupProfileResp postUpdateSignupProfileResp =
-      PostUpdateSignupProfileResp();
 
   @override
   void onClose() {
@@ -116,26 +111,4 @@ class ProfileSetupClientUserController extends GetxController {
     }
     profileSetupClientUserModelObj.value.dropdownItemList6.refresh();
   }
-
-  /// Calls the https://empylo-app.vercel.app/auth/id/update-signup-profile API with the specified request data.
-  ///
-  /// The [Map] parameter represents request body
-  Future<void> callUpdateSignupProfile(Map req) async {
-    try {
-      postUpdateSignupProfileResp =
-          await Get.find<ApiClient>().updateSignupProfile(
-        headers: {
-          'Content-type': 'application/json',
-        },
-        requestData: req,
-      );
-      _handleUpdateSignupProfileSuccess();
-    } on PostUpdateSignupProfileResp catch (e) {
-      postUpdateSignupProfileResp = e;
-      rethrow;
-    }
-  }
-
-  /// handles the success response for the API
-  void _handleUpdateSignupProfileSuccess() {}
 }
