@@ -592,9 +592,9 @@ class AppRoutes {
     ),
     GetPage(
       name: initialRoute,
-      page: () => SignInScreen(),
+      page: () => SplashScreen(),
       bindings: [
-        SignInBinding(),
+        SplashBinding(),
       ],
     )
   ];

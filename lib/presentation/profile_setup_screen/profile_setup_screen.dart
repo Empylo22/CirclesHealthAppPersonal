@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:empylo/data/models/updateSignUpProfile/post_update_signup_req.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../../core/utils/validation_functions.dart';
 import '../../data/models/updateSignUpProfile/post_update_signup_resp.dart';
@@ -244,14 +247,27 @@ class ProfileSetupScreen extends GetWidget<ProfileSetupController> {
   }
 
   /// Displays a dialog with the [EditProfilePicturePopupDialog] content.
-  onTapBtnUser() {
+  onTapBtnUser()async{
+    final pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      File file = File(pickedFile.path);
+      controller.onProfilePictureChange(file);
+    }
     Get.dialog(AlertDialog(
+      
       backgroundColor: Colors.transparent,
       contentPadding: EdgeInsets.zero,
       insetPadding: const EdgeInsets.only(left: 0),
       content: EditProfilePicturePopupDialog(
         Get.put(
-          EditProfilePicturePopupController(),
+          EditProfilePicturePopupController(
+            onProfilePictureChange: controller.onProfilePictureChange,
+          //   onProfilePictureChange: (file) {
+          //  if (file != null) {
+          //     controller.onProfilePictureChange(file);}
+          // },
+          ),
         ),
       ),
     ));
@@ -266,6 +282,18 @@ class ProfileSetupScreen extends GetWidget<ProfileSetupController> {
   Future<void> onTapSaveContinue() async {
     if (_formKey.currentState!.validate()) {
       try {
+        // Get the selected profile picture file from the controller
+      File? profilePictureFile = controller.selectedProfilePicture;
+
+      if (profilePictureFile == null) {
+        // Handle case where no profile picture is selected
+        // Optionally, you can show a message to the user
+        Get.rawSnackbar(
+          message: 'Please choose a valid Image',
+          snackPosition: SnackPosition.TOP,
+          backgroundColor: Colors.red
+        );
+      }
         // Creates an instance of UpdateProfileRequest
         PostUpdateSignUpProfileRequest data =
             await PostUpdateSignUpProfileRequest.getInstance();
@@ -274,13 +302,27 @@ class ProfileSetupScreen extends GetWidget<ProfileSetupController> {
         // data.DOB = controller.dateofbirthController.text;
         // data.gender = controller.selectedGender;
         // data.address = controller.selectedLocation as String?;
+        // data.accountType = await PostUpdateSignUpProfileRequest.getAccountType();
+        // //data.filename = await uploadProfilePicture(profilePictureFile);
+        // // Updates account type based on user interaction
         
-        // Updates account type based on user interaction
         await PostUpdateSignUpProfileRequest.updateAccountType('personalUser');
 
-        // Calls the API to update the signup profile
-        await controller.callUpdateSignupProfile();
+        // Create an instance of File by picking the file
+      final pickedFile = controller.selectedProfilePicture;
 
+      if (pickedFile != null) {
+        File file = File(pickedFile.path);
+
+        // Call the method to update the signup profile
+        await controller.callUpdateSignupProfile(file);
+
+        // Navigate to the next screen
+        _onUpdateProfileSuccess();
+      } else {
+        // Handle case where no file is selected
+        print('No file selected.');
+      }
         // Navigate to the next screen
         _onUpdateProfileSuccess();
       } on PostUpdateSignupProfileResp {

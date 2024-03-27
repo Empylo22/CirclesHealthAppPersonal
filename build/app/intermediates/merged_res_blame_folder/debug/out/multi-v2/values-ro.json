@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.empylo.app-mergeDebugResources-13:/values-ro/values-ro.xml",
+            "outputFile": "com.empylo.app-mergeDebugResources-5:/values-ro/values-ro.xml",
             "map": [
                 {
                     "source": "C:\\Users\\Owner\\.gradle\\caches\\transforms-3\\563e44461cba4c612266d93f8504db86\\transformed\\jetified-play-services-base-18.0.1\\res\\values-ro\\values.xml",

@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.empylo.app-mergeDebugResources-13:/values-fa/values-fa.xml",
+            "outputFile": "com.empylo.app-mergeDebugResources-5:/values-fa/values-fa.xml",
             "map": [
                 {
                     "source": "C:\\Users\\Owner\\.gradle\\caches\\transforms-3\\f5e39981a2a140b07d47972f3625f2e3\\transformed\\jetified-play-services-basement-18.2.0\\res\\values-fa\\values.xml",

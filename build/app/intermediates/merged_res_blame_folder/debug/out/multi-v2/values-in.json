@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.empylo.app-mergeDebugResources-13:/values-in/values-in.xml",
+            "outputFile": "com.empylo.app-mergeDebugResources-5:/values-in/values-in.xml",
             "map": [
                 {
                     "source": "C:\\Users\\Owner\\.gradle\\caches\\transforms-3\\0c2b2d1f62f8e43b02cf018e95ec1321\\transformed\\core-1.12.0\\res\\values-in\\values-in.xml",

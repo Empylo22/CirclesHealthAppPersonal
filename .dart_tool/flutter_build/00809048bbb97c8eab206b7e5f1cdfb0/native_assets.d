@@ -1,1 +1,0 @@
- C:\\empylo\\.dart_tool\\flutter_build\\00809048bbb97c8eab206b7e5f1cdfb0\\native_assets.yaml: 

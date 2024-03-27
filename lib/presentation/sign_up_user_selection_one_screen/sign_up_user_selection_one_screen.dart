@@ -28,7 +28,9 @@ class SignUpUserSelectionOneScreen
                   SizedBox(height: 20.v),
                   GestureDetector(
                     onTap: () async {
-                      controller.updateUserType('clientUser');
+                       await PostUpdateSignUpProfileRequest.updateAccountType(
+                          'clientUser');
+                      //controller.updateUserType('clientUser');
                       Get.toNamed(AppRoutes.signUpUserSelectionScreen);
                     },
                     child: CustomIconButton(

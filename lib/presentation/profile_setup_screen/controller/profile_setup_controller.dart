@@ -1,9 +1,14 @@
+import 'dart:io';
 import 'package:collection/collection.dart';
 import 'package:empylo/core/app_export.dart';
 import 'package:empylo/data/models/updateSignUpProfile/post_update_signup_req.dart';
 import 'package:empylo/presentation/profile_setup_screen/models/profile_setup_model.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../data/apiClient/api_client.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 /// A controller class for the ProfileSetupScreen.
 ///
@@ -16,7 +21,16 @@ class ProfileSetupController extends GetxController {
   Rx<ProfileSetupModel> profileSetupModelObj = ProfileSetupModel().obs;
   Rx<ProfileSetupModel> locationSetupModelObj = ProfileSetupModel().obs;
   SelectionPopupModel? selectedDropDownValue;
-  
+  File? selectedProfilePicture;
+
+  void onProfilePictureChange(File? file) {
+    // Update the selected profile picture with the newly selected file
+    selectedProfilePicture = file;
+
+    // Optionally, you can trigger a UI update here if needed
+    // For example, call update() if using a StatefulWidget
+    // update();
+  }
   
   @override
   void onClose() {
@@ -57,35 +71,73 @@ class ProfileSetupController extends GetxController {
     locationSetupModelObj.value.locationDropdownItemList.refresh();
   }
 
-  Future<void> callUpdateSignupProfile() async {
-    try {
-      // Create the request body with the necessary data
-      final req = {
-        'firstName': pepiconspencilpenController.text,
-        'lastName': lastnameController.text,
-        'DOB': dateofbirthController.text,
-        'gender': selectedGender,
-        'address': selectedLocation,
-        'accountType': await PostUpdateSignUpProfileRequest.getAccountType(),
-      };
 
-      // Call the API to update the signup profile
-      await Get.find<ApiClient>().updateSignupProfile(
-        headers: {'Content-type': 'application/json'},
-        requestData: req,
-      );
-
-      // Handle the success response
-      _handleUpdateSignupProfileSuccess();
-    } catch (e) {
-      // Re-throw the exception to handle it at a higher level if needed
-      print(e);
-      rethrow;
-    }
+// Function to pick and save file in shared preferences
+Future<void> pickAndSaveFile() async {
+  final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+  if (pickedFile != null) {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('filename', pickedFile.path);
+    print('File picked and saved: ${pickedFile.path}');
+  } else {
+    print('No file picked.');
   }
+}
+
+// Function to get the filename from shared preferences
+Future<String?> getFileName() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.getString('filename');
+}
+
+Future<void> callUpdateSignupProfile(File? file) async {
+  try {
+    // Retrieve filename from shared preferences
+    String? filename = await getFileName();
+
+    if (filename != null) {
+      // Check if file exists
+      File file = File(filename);
+      if (await file.exists()) {
+        // Create the request data with the necessary fields
+        final requestData = {
+          'firstName': pepiconspencilpenController.text,
+          'lastName': lastnameController.text,
+          'DOB': dateofbirthController.text,
+          'gender': selectedGender,
+          'address': selectedLocation,
+          'accountType': await PostUpdateSignUpProfileRequest.getAccountType(),
+          'filename': filename,
+        };
+
+        // Call the API to update the signup profile
+        await Get.find<ApiClient>().updateSignupProfile(
+          headers: {'Content-type': 'application/json'},
+          requestData: requestData,
+          file: file, // Include the file in the request
+        );
+
+        // Handle the success response
+        _handleUpdateSignupProfileSuccess();
+      } else {
+        print('File does not exist at path: $filename');
+      }
+    } else {
+      print('Filename not found in shared preferences');
+    }
+  } catch (e) {
+    // Re-throw the exception to handle it at a higher level if needed
+    print(e);
+    rethrow;
+  }
+}
+
 
 // Handles the success response for updating the signup profile
   void _handleUpdateSignupProfileSuccess() {
     
   }
+
+  
+
 }

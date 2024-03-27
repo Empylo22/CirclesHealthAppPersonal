@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:empylo/core/app_export.dart';
 import 'package:empylo/core/utils/progress_dialog_utils.dart';
 import 'package:empylo/data/models/forgotPasswordPost/post_forgot_password_post_resp.dart';
@@ -7,6 +9,8 @@ import 'package:empylo/data/models/signupUser/post_signup_user_resp.dart';
 import 'package:empylo/data/models/verifyUserAuth/post_verify_user_auth_resp.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:empylo/data/models/updateSignUpProfile/post_update_signup_resp.dart';
+import 'dart:io';
+import 'package:http/http.dart' as http;
 
 class ApiClient extends GetConnect {
   var url = "https://empylo-app.vercel.app";
@@ -31,6 +35,12 @@ class ApiClient extends GetConnect {
   bool _isSuccessCall(Response response) {
     return response.isOk;
   }
+/// is `true` for updateSignupProfile when the response status code is between 200 and 299
+  ///
+  /// user can modify this method with custom logics based on their API response
+  bool _isSuccessCallUp(http.Response response) {
+  return response.statusCode >= 200 && response.statusCode < 300;
+}
 
   /// Performs API call for https://empylo-app.vercel.app/auth/id/update-signup-profile
   ///
@@ -39,67 +49,95 @@ class ApiClient extends GetConnect {
   /// Returns a [PostUpdateSignupProfileResp] object representing the response.
   /// Throws an error if the request fails or an exception occurs.
   Future<PostUpdateSignupProfileResp> updateSignupProfile({
-    Map<String, String> headers = const {},
-    Map requestData = const {},
-  }) async {
-    ProgressDialogUtils.showProgressDialog();
+  Map<String, String> headers = const {},
+  Map requestData = const {},
+  File? file, // Add this parameter for the file
+}) async {
+  ProgressDialogUtils.showProgressDialog();
 
-    try {
-      await isNetworkConnected();
+  try {
+    await isNetworkConnected();
 
-      // Fetches the saved token
+    // Fetches the saved token
+    String? token = await getSavedToken();
 
-      String? token = await getSavedToken();
+    if (token != null) {
+      // Decodes the token to extract the ID
+      Map<String, dynamic> decodedToken = decodeToken(token);
+      String? userId = decodedToken['id']?.toString();
 
-      if (token != null) {
-        // Decodes the token to extract the ID
+      if (userId != null) {
+        // Constructs the endpoint with the user ID
+        String endpoint = '$url/auth/$userId/update-signup-profile';
 
-        Map<String, dynamic> decodedToken = decodeToken(token);
+        if (file != null) {
+          // Create multipart request if file is present
+          var request = http.MultipartRequest('POST', Uri.parse(endpoint));
 
-        String? userId = decodedToken['id']?.toString();
+          // Add headers
+          request.headers.addAll(headers);
 
-        if (userId != null) {
-          // Constructs the endpoint with the user ID
+          // Add fields
+          requestData.forEach((key, value) {
+            request.fields[key] = value.toString();
+          });
 
-          String endpoint = '$url/auth/$userId/update-signup-profile';
+          // Add file
+          request.files.add(
+            await http.MultipartFile.fromPath('filename', file.path),
+          );
 
-          Response response = await httpClient.post(
+          // Send request and get response
+          var streamedResponse = await request.send();
+          var response = await http.Response.fromStream(streamedResponse);
+
+          ProgressDialogUtils.hideProgressDialog();
+
+          if (_isSuccessCallUp(response)) {
+            return PostUpdateSignupProfileResp.fromJson(jsonDecode(response.body));
+          } else {
+            throw response.body != null
+                ? PostUpdateSignupProfileResp.fromJson(jsonDecode(response.body))
+                : 'Something Went Wrong!';
+          }
+        } else {
+          // If no file, send regular JSON request
+          var response = await httpClient.post(
             endpoint,
             headers: headers,
-            body: requestData,
+            body: jsonEncode(requestData),
           );
 
           ProgressDialogUtils.hideProgressDialog();
 
           if (_isSuccessCall(response)) {
-            return PostUpdateSignupProfileResp.fromJson(response.body);
+            return PostUpdateSignupProfileResp.fromJson(jsonDecode(response.body));
           } else {
             throw response.body != null
-                ? PostUpdateSignupProfileResp.fromJson(response.body)
+                ? PostUpdateSignupProfileResp.fromJson(jsonDecode(response.body))
                 : 'Something Went Wrong!';
           }
-        } else {
-          ProgressDialogUtils.hideProgressDialog();
-          throw 'User ID not found in the decoded token';
         }
+      } else {
+        ProgressDialogUtils.hideProgressDialog();
+        throw 'User ID not found in the decoded token';
       }
-
-      // Handles cases where token or userId is null
-
-      ProgressDialogUtils.hideProgressDialog();
-
-      throw 'Invalid User ID';
-    } catch (error, stackTrace) {
-      ProgressDialogUtils.hideProgressDialog();
-
-      Logger.log(
-        error,
-        stackTrace: stackTrace,
-      );
-
-      rethrow;
     }
+
+    // Handles cases where token or userId is null
+    ProgressDialogUtils.hideProgressDialog();
+    throw 'Invalid User ID';
+  } catch (error, stackTrace) {
+    ProgressDialogUtils.hideProgressDialog();
+
+    Logger.log(
+      error,
+      stackTrace: stackTrace,
+    );
+
+    rethrow;
   }
+}
 
   // /// Performs API call for https://empylo-app.vercel.app/auth/user/forgot-password
 

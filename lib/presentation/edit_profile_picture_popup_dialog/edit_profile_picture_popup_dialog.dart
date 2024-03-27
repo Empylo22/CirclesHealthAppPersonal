@@ -1,19 +1,15 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/widgets.dart';
+import 'dart:io';
+
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import 'controller/edit_profile_picture_popup_controller.dart';
 import 'package:empylo/core/app_export.dart';
-import 'package:flutter/material.dart';
 
 class EditProfilePicturePopupDialog extends StatelessWidget {
-  EditProfilePicturePopupDialog(
-    this.controller, {
-    Key? key,
-  }) : super(
-          key: key,
-        );
+  final EditProfilePicturePopupController controller;
 
-  EditProfilePicturePopupController controller;
+  EditProfilePicturePopupDialog(this.controller);
 
   @override
   Widget build(BuildContext context) {
@@ -27,173 +23,78 @@ class EditProfilePicturePopupDialog extends StatelessWidget {
       decoration: AppDecoration.fillIndigo.copyWith(
         borderRadius: BorderRadiusStyle.roundedBorder20,
       ),
-      child: Column(children: [
-        Row(children: [ 
-          CustomImageView(
-              imagePath: ImageConstant.imgEllipse3,
-              height: 72.adaptSize,
-              width: 72.adaptSize,
-              margin: EdgeInsets.only(
-                top: 14.v,
-                right: 16.h,
-              )),
-          SizedBox( 
-            width: 12.v,
-          ),
-          Text(
-            'Edit Profile Picture',
-            style: TextStyle(
-                fontSize: 16.0,
-                fontStyle: FontStyle.normal,
-                fontWeight: FontWeight.w500),
-          )
-        ]),
-        Container(
-          decoration: AppDecoration.fillWhiteA.copyWith(
-        borderRadius: BorderRadiusStyle.roundedBorder20,
-      ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: Column(
+        children: [
+          Row(
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(
-                      top: 8.v,
-                      bottom: 5.v,
-                      left: 10.h
-                    ),
-                    child: Text(
-                      "lbl_use_avatar".tr,
-                      style: theme.textTheme.bodyMedium,
-                    ),
+              Obx(() {
+                return CustomImageView(
+                  imagePath: controller.selectedImage.value != null
+                      ? controller.selectedImage.value!.path
+                      : ImageConstant.imgEllipse3,
+                  height: 72.adaptSize,
+                  width: 72.adaptSize,
+                  margin: EdgeInsets.only(
+                    top: 14.v,
+                    right: 16.h,
                   ),
-                  GestureDetector(
-                    onTap: () {
-                      
-                    },
-                    child: CustomImageView(
-                      imagePath: ImageConstant.imgPhsmileylight,
-                      height: 24.adaptSize,
-                      width: 24.adaptSize,
-                      margin: EdgeInsets.only(
-                        top: 8.v,
-                        right: 7.h,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 8.h,),
-              Divider(height: 1.h,),
-              Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            Padding(
-              padding: EdgeInsets.only(
-                top: 8.v,
-                bottom: 5.v,
-                left: 10.h
-              ),
-              child: Text(
-                "lbl_take_photo".tr,
-                style: theme.textTheme.bodyMedium,
-              ),
-            ),
-            GestureDetector(
-              onTap: () {
-                
-              },
-              child: CustomImageView(
-                imagePath: ImageConstant.imgBiCamera,
-                height: 24.adaptSize,
-                width: 24.adaptSize,
-                margin: EdgeInsets.only(
-                  top: 8.v,
-                  right: 7.h,
-                  bottom: 8.v
+                );
+              }),
+              SizedBox(width: 12.v),
+              Text(
+                'Edit Profile Picture',
+                style: TextStyle(
+                  fontSize: 16.0,
+                  fontStyle: FontStyle.normal,
+                  fontWeight: FontWeight.w500,
                 ),
-              ),
-            ),
-          ],
-        ),
-        SizedBox(height: 8.h,),
-              Divider(height: 1.h,),
-              Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            Padding(
-              padding: EdgeInsets.only(
-                top: 8.v,
-                bottom: 5.v,
-                left: 10.h
-              ),
-              child: Text(
-                "lbl_choose_photo".tr,
-                style: theme.textTheme.bodyMedium,
-              ),
-            ),
-            GestureDetector(
-              onTap: () {
-                
-              },
-              child: CustomImageView(
-                imagePath: ImageConstant.imgClarityPictureLine,
-                height: 24.adaptSize,
-                width: 24.adaptSize,
-                margin: EdgeInsets.only(
-                  top: 8.v,
-                  right: 7.h,
-                  bottom: 8.v
-                ),
-              ),
-            ),
-          ],
-        ),
-        SizedBox(height: 8.h,),
-              Divider(height: 1.h,),
-              Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            Padding(
-              padding: EdgeInsets.only(
-                top: 8.v,
-                bottom: 5.v,
-                left: 10.h
-              ),
-              child: Text(
-                "lbl_delete_photo".tr,
-                style: theme.textTheme.bodyMedium,
-              ),
-            ),
-            GestureDetector(
-              onTap: () {
-                
-              },
-              child: CustomImageView(
-                imagePath: ImageConstant.imgIonTrashOutline,
-                height: 24.adaptSize,
-                width: 24.adaptSize,
-                margin: EdgeInsets.only(
-                  top: 8.v,
-                  right: 7.h,
-                  bottom: 8.v
-                ),
-              ),
-            ),
-          ],
-        ),
+              )
             ],
           ),
-          
-        ),
-        
-      ]),
+          SizedBox(height: 12.v),
+          _buildButton("Use Avatar", ImageConstant.imgPhsmileylight, () {
+            // Add logic to use avatar
+          }),
+          _buildButton("Take Photo", ImageConstant.imgBiCamera, () {
+            // Add logic to take photo
+          }),
+          _buildButton("Choose Photo", ImageConstant.imgClarityPictureLine, () {
+            // Call pickFile function here
+            controller.pickFile();
+          }),
+          _buildButton("Delete Photo", ImageConstant.imgIonTrashOutline, () {
+            // Add logic to delete photo
+          }),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildButton(String label, String iconPath, VoidCallback onPressed) {
+    return GestureDetector(
+      onTap: onPressed,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 8.v, horizontal: 10.h),
+            child: Text(
+              label.tr,
+              style: theme.textTheme.bodyMedium,
+            ),
+          ),
+          CustomImageView(
+            imagePath: iconPath,
+            height: 24.adaptSize,
+            width: 24.adaptSize,
+            margin: EdgeInsets.only(
+              top: 8.v,
+              right: 7.h,
+              bottom: 8.v,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
