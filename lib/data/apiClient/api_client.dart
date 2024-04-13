@@ -13,7 +13,7 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 
 class ApiClient extends GetConnect {
-  var url = "https://empylo-app.vercel.app";
+  var url = "https://api.empylo.com";
 
   @override
   void onInit() {
@@ -49,9 +49,11 @@ class ApiClient extends GetConnect {
   /// Returns a [PostUpdateSignupProfileResp] object representing the response.
   /// Throws an error if the request fails or an exception occurs.
   Future<PostUpdateSignupProfileResp> updateSignupProfile({
-  Map<String, String> headers = const {},
+  Map<String, String> headers = const {
+     'Content-Type': 'application/json',
+  },
   Map requestData = const {},
-  File? file, // Add this parameter for the file
+  File? file, // parameter for the file
 }) async {
   ProgressDialogUtils.showProgressDialog();
 

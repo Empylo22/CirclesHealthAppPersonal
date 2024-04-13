@@ -107,7 +107,7 @@ Future<void> callUpdateSignupProfile(File? file) async {
           'gender': selectedGender,
           'address': selectedLocation,
           'accountType': await PostUpdateSignUpProfileRequest.getAccountType(),
-          'filename': filename,
+          //'filename': filename,
         };
 
         // Call the API to update the signup profile

@@ -23,6 +23,7 @@ class SignUpScreen extends GetWidget<SignUpController> {
             body: SizedBox(
                 width: SizeUtils.width,
                 child: SingleChildScrollView(
+                    reverse: true,
                     padding: EdgeInsets.only(
                         bottom: MediaQuery.of(context).viewInsets.bottom),
                     child: Form(
@@ -136,6 +137,7 @@ class SignUpScreen extends GetWidget<SignUpController> {
     return Padding(
       padding: EdgeInsets.only(left: 26.h, right: 24.h),
       child: CustomTextFormField(
+          autofocus: false,
           controller: controller.emailController,
           hintText: "msg_enter_your_email".tr,
           hintStyle: CustomTextStyles.titleSmallGray600,
@@ -163,6 +165,7 @@ class SignUpScreen extends GetWidget<SignUpController> {
     return Padding(
         padding: EdgeInsets.only(left: 26.h, right: 24.h),
         child: Obx(() => CustomTextFormField(
+            autofocus: false,
             controller: controller.passwordController,
             hintText: "msg_enter_your_password".tr,
             hintStyle: CustomTextStyles.titleSmallGray600,

@@ -9,7 +9,6 @@ import 'package:empylo/widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:empylo/data/models/loginUser/post_login_user_req.dart';
 import 'package:empylo/data/models/loginUser/post_login_user_resp.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 // ignore_for_file: must_be_immutable
 class SignInScreen extends GetWidget<SignInController> {
@@ -259,7 +258,7 @@ class SignInScreen extends GetWidget<SignInController> {
         // Decode the accessToken payload
         Map<String, dynamic> payload = JwtDecoder.decode(accessToken);
 
-        // Access the accountType
+        // Access the accountType, firstName and lastName
         String? accountType = payload['accountType'];
         String? firstName = payload['firstName'];
         String? lastName = payload['lastName'];

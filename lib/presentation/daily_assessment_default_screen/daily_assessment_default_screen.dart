@@ -44,13 +44,23 @@ class DailyAssessmentDefaultScreen
   /// Section Widget
   PreferredSizeWidget _buildAppBar() {
     return CustomAppBar(
-        leadingWidth: 56.h,
-        leading: AppbarLeadingIconbuttonOne(
-            imagePath: ImageConstant.imgArrowLeftBlack900,
-            margin: EdgeInsets.only(left: 16.h, top: 8.v, bottom: 8.v),
-            onTap: () {
-              onTapArrowLeft();
-            }),
+      leadingWidth: double.maxFinite,
+      leading: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+              padding: EdgeInsets.only(left: 19.h, top: 9.h),
+              child: CustomIconButton(
+                  height: 40.adaptSize,
+                  width: 40.adaptSize,
+                  padding: EdgeInsets.all(12.h),
+                  onTap: () {
+                    onTapArrowLeft();
+                  },
+                  child: CustomImageView(
+                      imagePath: ImageConstant.imgArrowLeftBlack900))),
+        ],
+      ),
         title: AppbarSubtitleTwo(
             text: "lbl_assessment".tr, margin: EdgeInsets.only(left: 21.h)),
         actions: [

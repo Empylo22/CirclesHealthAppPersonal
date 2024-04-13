@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:empylo/data/models/updateSignUpProfile/post_update_signup_req.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../core/utils/validation_functions.dart';
 import '../../data/models/updateSignUpProfile/post_update_signup_resp.dart';
@@ -153,15 +154,24 @@ class ProfileSetupScreen extends GetWidget<ProfileSetupController> {
   /// Section Widget
   PreferredSizeWidget _buildAppBar() {
     return CustomAppBar(
-        leadingWidth: double.maxFinite,
-        leading: AppbarLeadingIconbutton(
-            imagePath: ImageConstant.imgArrowLeftBlack900,
-            //iconHeight: 40.adaptsize,
-            //iconWidth: 40.adaptsize,
-            margin: EdgeInsets.fromLTRB(16.h, 8.v, 337.h, 8.v),
-            onTap: () {
-              onTapArrowLeft();
-            }));
+      leadingWidth: double.maxFinite,
+      leading: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+              padding: EdgeInsets.only(left: 19.h, top: 9.h),
+              child: CustomIconButton(
+                  height: 40.adaptSize,
+                  width: 40.adaptSize,
+                  padding: EdgeInsets.all(12.h),
+                  onTap: () {
+                    onTapArrowLeft();
+                  },
+                  child: CustomImageView(
+                      imagePath: ImageConstant.imgArrowLeftBlack900))),
+        ],
+      ),
+    );
   }
 
   Widget _buildFrame() {
@@ -172,6 +182,7 @@ class ProfileSetupScreen extends GetWidget<ProfileSetupController> {
               child: Padding(
                   padding: EdgeInsets.only(right: 4.h),
                   child: CustomTextFormField(
+                    autofocus: false,
                       controller: controller.pepiconspencilpenController,
                       hintText: "lbl_first_name".tr,
                       hintStyle: CustomTextStyles.bodySmallBluegray40001,
@@ -247,30 +258,38 @@ class ProfileSetupScreen extends GetWidget<ProfileSetupController> {
   }
 
   /// Displays a dialog with the [EditProfilePicturePopupDialog] content.
-  onTapBtnUser()async{
+  onTapBtnUser() async {
     final pickedFile =
         await ImagePicker().pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       File file = File(pickedFile.path);
       controller.onProfilePictureChange(file);
-    }
+      }
+    // showDialog(
+    //     context: context,
+    //     builder: (context) => AlertDialog(
+    //       backgroundColor: Colors.transparent,
+    //   contentPadding: EdgeInsets.zero,
+    //   insetPadding: const EdgeInsets.only(left: 0),
+    //           content: EditProfilePicturePopupDialog(
+    //               EditProfilePicturePopupController()),
+    //         ));
     Get.dialog(AlertDialog(
-      
-      backgroundColor: Colors.transparent,
-      contentPadding: EdgeInsets.zero,
-      insetPadding: const EdgeInsets.only(left: 0),
-      content: EditProfilePicturePopupDialog(
-        Get.put(
-          EditProfilePicturePopupController(
-            onProfilePictureChange: controller.onProfilePictureChange,
-          //   onProfilePictureChange: (file) {
-          //  if (file != null) {
-          //     controller.onProfilePictureChange(file);}
-          // },
+       backgroundColor: Colors.transparent,
+       contentPadding: EdgeInsets.zero,
+       insetPadding: const EdgeInsets.only(left: 0),
+       content: EditProfilePicturePopupDialog(
+         Get.put(
+           EditProfilePicturePopupController(
+             onProfilePictureChange: controller.onProfilePictureChange,
+            //   onProfilePictureChange: (file) {
+            //  if (file != null) {
+            //     controller.onProfilePictureChange(file);}
+            // },
           ),
-        ),
-      ),
-    ));
+         ),
+       ),
+     ));
   }
 
   /// Navigates to the previous screen.
@@ -283,17 +302,16 @@ class ProfileSetupScreen extends GetWidget<ProfileSetupController> {
     if (_formKey.currentState!.validate()) {
       try {
         // Get the selected profile picture file from the controller
-      File? profilePictureFile = controller.selectedProfilePicture;
+        File? profilePictureFile = controller.selectedProfilePicture;
 
-      if (profilePictureFile == null) {
-        // Handle case where no profile picture is selected
-        // Optionally, you can show a message to the user
-        Get.rawSnackbar(
-          message: 'Please choose a valid Image',
-          snackPosition: SnackPosition.TOP,
-          backgroundColor: Colors.red
-        );
-      }
+        if (profilePictureFile == null) {
+          // Handle case where no profile picture is selected
+          // Optionally, you can show a message to the user
+          Get.rawSnackbar(
+              message: 'Please choose a valid Image',
+              snackPosition: SnackPosition.TOP,
+              backgroundColor: Colors.red);
+        }
         // Creates an instance of UpdateProfileRequest
         PostUpdateSignUpProfileRequest data =
             await PostUpdateSignUpProfileRequest.getInstance();
@@ -305,26 +323,24 @@ class ProfileSetupScreen extends GetWidget<ProfileSetupController> {
         // data.accountType = await PostUpdateSignUpProfileRequest.getAccountType();
         // //data.filename = await uploadProfilePicture(profilePictureFile);
         // // Updates account type based on user interaction
-        
+
         await PostUpdateSignUpProfileRequest.updateAccountType('personalUser');
 
         // Create an instance of File by picking the file
-      final pickedFile = controller.selectedProfilePicture;
+        final pickedFile = controller.selectedProfilePicture;
 
-      if (pickedFile != null) {
-        File file = File(pickedFile.path);
+        if (pickedFile != null) {
+          File file = File(pickedFile.path);
 
-        // Call the method to update the signup profile
-        await controller.callUpdateSignupProfile(file);
+          // Call the method to update the signup profile
+          await controller.callUpdateSignupProfile(file);
 
-        // Navigate to the next screen
-        _onUpdateProfileSuccess();
-      } else {
-        // Handle case where no file is selected
-        print('No file selected.');
-      }
-        // Navigate to the next screen
-        _onUpdateProfileSuccess();
+          // Navigate to the next screen
+          _onUpdateProfileSuccess();
+        } else {
+          // Handle case where no file is selected
+          print('No file selected.');
+        }
       } on PostUpdateSignupProfileResp {
         _onUpdateProfileError();
       } on NoInternetException catch (e) {
@@ -340,14 +356,35 @@ class ProfileSetupScreen extends GetWidget<ProfileSetupController> {
     print("Update Profile Success");
   }
 
-  void _onUpdateProfileError() {
+  void _onUpdateProfileError() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    // Save the captured values in SharedPreferences
+    await prefs.setString(
+        'firstName', controller.pepiconspencilpenController.text);
+    await prefs.setString('lastName', controller.lastnameController.text);
+    await prefs.setString('Gender', controller.selectedGender);
+    await prefs.setString('Location', controller.selectedLocation);
+
+    // Show the error dialog
     Get.defaultDialog(
-      onConfirm: () => Get.back(),
       title: 'Error',
       backgroundColor: Color(0xFFF4F4F4),
       middleText: 'Failed to update profile. Please try again.',
+      actions: [
+        TextButton(
+          //style: ButtonStyle(backgroundColor: Colors.g),
+          onPressed: () {
+            // Navigate to the home screen
+            Get.toNamed(AppRoutes.homePersonalUserContainerScreen);
+            print("Profile details not updated yet");
+          },
+          child: Text('Update Profile Later'),
+        ),
+      ],
     );
   }
+
   // onTapSaveContinue() {
   //   Get.toNamed(
   //     AppRoutes.dailyAssessmentDefaultScreen,

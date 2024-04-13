@@ -100,7 +100,7 @@ final Map<String, String> enUs = {
   "lbl_wellbeing_score": "Wellbeing Score",
   "msg_how_re_you_feeling": "How’re you feeling today?",
   "msg_lorem_ipsum_dolor":
-      "Lorem ipsum dolor sit amet consectetur. Nunc malesuada sapien elit luctus arcu.",
+      "Your score indicates that your overall workplace experience is positive. You are not only managing your workload effectively but also maintaining a healthy work-life balance.",
 
   // Notifications Screen
   "msg_earlier_this_week": "Earlier this week",

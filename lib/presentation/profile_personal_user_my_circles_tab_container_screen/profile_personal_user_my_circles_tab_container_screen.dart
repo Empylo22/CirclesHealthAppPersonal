@@ -94,6 +94,7 @@ class ProfilePersonalUserMyCirclesTabContainerScreen
         decoration: BoxDecoration(
             color: appTheme.gray300, borderRadius: BorderRadius.circular(18.h)),
         child: TabBar(
+            indicatorSize: TabBarIndicatorSize.tab,
             controller: controller.tabviewController,
             labelPadding: EdgeInsets.zero,
             labelColor: theme.colorScheme.onPrimary,

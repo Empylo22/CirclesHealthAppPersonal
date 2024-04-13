@@ -1,9 +1,9 @@
 import 'package:empylo/presentation/explore_group_activities_page/explore_group_activities_page.dart';
+import 'package:empylo/widgets/custom_icon_button.dart';
 import 'controller/explore_group_activities_tab_container_controller.dart';
 import 'models/explore_group_activities_tab_container_model.dart';
 import 'package:empylo/core/app_export.dart';
 import 'package:empylo/presentation/explore_self_development_page/explore_self_development_page.dart';
-import 'package:empylo/widgets/app_bar/appbar_leading_iconbutton.dart';
 import 'package:empylo/widgets/app_bar/custom_app_bar.dart';
 import 'package:empylo/widgets/custom_search_view.dart';
 import 'package:flutter/material.dart';
@@ -55,13 +55,24 @@ class ExploreGroupActivitiesTabContainerPage extends StatelessWidget {
   /// Section Widget
   PreferredSizeWidget _buildAppBar() {
     return CustomAppBar(
-        leadingWidth: double.maxFinite,
-        leading: AppbarLeadingIconbutton(
-            imagePath: ImageConstant.imgArrowLeftBlack900,
-            margin: EdgeInsets.fromLTRB(16.h, 8.v, 337.h, 8.v),
-            onTap: () {
-              onTapArrowLeft();
-            }));
+      leadingWidth: double.maxFinite,
+      leading: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+              padding: EdgeInsets.only(left: 19.h, top: 9.h),
+              child: CustomIconButton(
+                  height: 40.adaptSize,
+                  width: 40.adaptSize,
+                  padding: EdgeInsets.all(12.h),
+                  onTap: () {
+                    onTapArrowLeft();
+                  },
+                  child: CustomImageView(
+                      imagePath: ImageConstant.imgArrowLeftBlack900))),
+        ],
+      ),
+    );
   }
 
   /// Section Widget
@@ -72,6 +83,7 @@ class ExploreGroupActivitiesTabContainerPage extends StatelessWidget {
         decoration: BoxDecoration(
             color: appTheme.gray300, borderRadius: BorderRadius.circular(19.h)),
         child: TabBar(
+            indicatorSize: TabBarIndicatorSize.tab,
             controller: controller.tabviewController,
             labelPadding: EdgeInsets.zero,
             labelColor: theme.colorScheme.onPrimary,
@@ -94,7 +106,9 @@ class ExploreGroupActivitiesTabContainerPage extends StatelessWidget {
                       spreadRadius: 2.h,
                       blurRadius: 2.h,
                       offset: Offset(0, 4))
-                ]),
+                ],
+                
+                ),
             tabs: [
               Tab(child: Text("msg_self_development".tr)),
               Tab(child: Text("msg_group_activities".tr))
