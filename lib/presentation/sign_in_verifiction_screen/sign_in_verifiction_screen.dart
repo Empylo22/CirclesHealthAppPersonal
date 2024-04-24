@@ -104,7 +104,7 @@ class SignInVerifictionScreen extends GetWidget<SignInVerifictionController> {
   /// Throws a `NoInternetException` if there is no internet connection.
   Future<void> onTapVerify() async {
     PostVerifyUserAuthReq postVerifyUserAuthReq = PostVerifyUserAuthReq(
-      code: controller.otpController.value.text,
+      otp: controller.otpController.value.text,
     );
     try {
       await controller.callVerifyUserAuth(

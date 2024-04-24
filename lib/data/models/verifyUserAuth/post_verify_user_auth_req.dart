@@ -1,12 +1,12 @@
 class PostVerifyUserAuthReq {
 
-  String? code;
+  String? otp;
 
-  PostVerifyUserAuthReq({this.code});
+  PostVerifyUserAuthReq({this.otp});
 
   PostVerifyUserAuthReq.fromJson(Map<String, dynamic> json) {
 
-    code = json['code'];
+    otp = json['otp'];
 
   }
 
@@ -14,10 +14,8 @@ class PostVerifyUserAuthReq {
 
     final data = <String, dynamic>{};
 
-    if (code != null) {
-
-      data['code'] = code;
-
+    if (otp != null) {
+      data['otp'] = otp;
     }
 
     return data;

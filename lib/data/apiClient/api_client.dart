@@ -4,7 +4,7 @@ import 'package:empylo/core/app_export.dart';
 import 'package:empylo/core/utils/progress_dialog_utils.dart';
 import 'package:empylo/data/models/forgotPasswordPost/post_forgot_password_post_resp.dart';
 import 'package:empylo/data/models/loginUser/post_login_user_resp.dart';
-import 'package:empylo/data/models/resetPassword/post_reset_password_resp.dart';
+import 'package:empylo/data/models/resetPassword/patch_reset_password_resp.dart';
 import 'package:empylo/data/models/signupUser/post_signup_user_resp.dart';
 import 'package:empylo/data/models/verifyUserAuth/post_verify_user_auth_resp.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -42,9 +42,46 @@ class ApiClient extends GetConnect {
   return response.statusCode >= 200 && response.statusCode < 300;
 }
 
-  /// Performs API call for https://empylo-app.vercel.app/auth/id/update-signup-profile
+/// Performs API call for https://api.empylo.com/auth/user/reset-password
+///
+/// Sends a PATCH request to the server's 'https://api.empylo.com/auth/user/reset-password' endpoint
+/// with the provided headers and request data
+/// Returns a [PostResetPasswordResp] object representing the response.
+/// Throws an error if the request fails or an exception occurs.
+Future<PatchResetPasswordResp> resetPassword({
+  Map<String, String> headers = const {},
+  Map requestData = const {},
+}) async {
+  ProgressDialogUtils.showProgressDialog();
+  try {
+    await isNetworkConnected();
+    Response response = await httpClient.patch(
+      '$url/auth/password-reset',
+      headers: headers,
+      body: requestData,
+    );
+    ProgressDialogUtils.hideProgressDialog();
+    if (_isSuccessCall(response)) {
+      return PatchResetPasswordResp.fromJson(response.body);
+    } else {
+      throw response.body != null
+          ? PatchResetPasswordResp.fromJson(response.body)
+          : 'Something Went Wrong!';
+    }
+  } catch (error, stackTrace) {
+    ProgressDialogUtils.hideProgressDialog();
+    Logger.log(
+      error,
+      stackTrace: stackTrace,
+    );
+    rethrow;
+  }
+}
+
+
+  /// Performs API call for https://api.empylo.com/auth/id/update-signup-profile
   ///
-  /// Sends a POST request to the server's 'https://empylo-app.vercel.app/auth/user/reset-password' endpoint
+  /// Sends a POST request to the server's 'https://api.empylo.com/auth/user/reset-password' endpoint
   /// with the provided headers and request data
   /// Returns a [PostUpdateSignupProfileResp] object representing the response.
   /// Throws an error if the request fails or an exception occurs.
@@ -70,7 +107,7 @@ class ApiClient extends GetConnect {
 
       if (userId != null) {
         // Constructs the endpoint with the user ID
-        String endpoint = '$url/auth/$userId/update-signup-profile';
+        String endpoint = '$url/user/update-user-info/$userId';
 
         if (file != null) {
           // Create multipart request if file is present
@@ -141,11 +178,11 @@ class ApiClient extends GetConnect {
   }
 }
 
-  // /// Performs API call for https://empylo-app.vercel.app/auth/user/forgot-password
+  // /// Performs API call for https://api.empylo.com/auth/user/forgot-password
 
   // ///
 
-  // /// Sends a POST request to the server's 'https://empylo-app.vercel.app/auth/user/forgot-password' endpoint
+  // /// Sends a POST request to the server's 'https://api.empylo.com/auth/user/forgot-password' endpoint
 
   // /// with the provided headers and request data
 
@@ -210,9 +247,9 @@ class ApiClient extends GetConnect {
   //   }
 
   // }
-  /// Performs API call for https://empylo-app.vercel.app/auth/user/forgot-password
+  /// Performs API call for https://api.empylo.com/auth/user/forgot-password
   ///
-  /// Sends a POST request to the server's 'https://empylo-app.vercel.app/auth/user/forgot-password' endpoint
+  /// Sends a POST request to the server's 'https://api.empylo.com/auth/user/forgot-password' endpoint
   /// with the provided headers and request data
   /// Returns a [PostForgotPasswordPostResp] object representing the response.
   /// Throws an error if the request fails or an exception occurs.
@@ -224,7 +261,7 @@ class ApiClient extends GetConnect {
     try {
       await isNetworkConnected();
       Response response = await httpClient.post(
-        '$url/auth/user/forgot-password',
+        '$url/auth/forgot-password',
         headers: headers,
         body: requestData,
       );
@@ -246,9 +283,9 @@ class ApiClient extends GetConnect {
     }
   }
 
-  /// Performs API call for https://empylo-app.vercel.app/auth/user/verify
+  /// Performs API call for https://api.empylo.com/auth/user/verify
   ///
-  /// Sends a POST request to the server's 'https://empylo-app.vercel.app/auth/user/verify' endpoint
+  /// Sends a POST request to the server's 'https://api.empylo.com/auth/user/verify' endpoint
   /// with the provided headers and request data
   /// Returns a [PostVerifyUserAuthResp] object representing the response.
   /// Throws an error if the request fails or an exception occurs.
@@ -260,7 +297,7 @@ class ApiClient extends GetConnect {
     try {
       await isNetworkConnected();
       Response response = await httpClient.post(
-        '$url/auth/user/verify',
+        '$url/auth/verify-email-otp',
         headers: headers,
         body: requestData,
       );
@@ -282,9 +319,9 @@ class ApiClient extends GetConnect {
     }
   }
 
-  /// Performs API call for https://empylo-app.vercel.app/auth/user/login
+  /// Performs API call for https://api.empylo.com/auth/login
   ///
-  /// Sends a POST request to the server's 'https://empylo-app.vercel.app/auth/user/login' endpoint
+  /// Sends a POST request to the server's 'https://api.empylo.com/auth/login' endpoint
   /// with the provided headers and request data
   /// Returns a [PostLoginUserResp] object representing the response.
   /// Throws an error if the request fails or an exception occurs.
@@ -296,7 +333,7 @@ class ApiClient extends GetConnect {
     try {
       await isNetworkConnected();
       Response response = await httpClient.post(
-        '$url/auth/user/login',
+        '$url/auth/login',
         headers: headers,
         body: requestData,
       );
@@ -318,9 +355,9 @@ class ApiClient extends GetConnect {
     }
   }
 
-  /// Performs API call for https://empylo-app.vercel.app/auth/user/signup
+  /// Performs API call for https://api.empylo.com/auth/signup
   ///
-  /// Sends a POST request to the server's 'https://empylo-app.vercel.app/auth/user/signup' endpoint
+  /// Sends a POST request to the server's 'https://api.empylo.com/auth/signup' endpoint
   /// with the provided headers and request data
   /// Returns a [PostSignupUserResp] object representing the response.
   /// Throws an error if the request fails or an exception occurs.
@@ -332,7 +369,7 @@ class ApiClient extends GetConnect {
     try {
       await isNetworkConnected();
       Response response = await httpClient.post(
-        '$url/auth/user/signup',
+        '$url/auth/user-signup',
         headers: headers,
         body: requestData,
       );

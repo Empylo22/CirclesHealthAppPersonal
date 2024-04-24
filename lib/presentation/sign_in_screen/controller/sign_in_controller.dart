@@ -39,7 +39,7 @@ class SignInController extends GetxController {
       );
       // Assuming the response structure contains an 'accessToken'
 
-      String? accessToken = postLoginUserResp.data?.accessToken;
+      String? accessToken = postLoginUserResp.result?.accessToken;
 
       if (accessToken != null) {
         // Save the token in SharedPreferences

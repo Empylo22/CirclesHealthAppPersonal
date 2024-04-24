@@ -165,11 +165,11 @@ class ForgotPasswordScreen extends GetWidget<ForgotPasswordController> {
     PostForgotPasswordPostResp postForgotPasswordPostResp =
         PostForgotPasswordPostResp();
 
-    if (postForgotPasswordPostResp.statusCode == 404) {
+    if (postForgotPasswordPostResp.status == 404) {
       Get.rawSnackbar(message: "Email not found. Please enter a valid email.");
-    } else if (postForgotPasswordPostResp.statusCode == 400) {
+    } else if (postForgotPasswordPostResp.status == 400) {
       Get.rawSnackbar(message: "Invalid request. Please check your email.");
-    } else if (postForgotPasswordPostResp.statusCode == 500) {
+    } else if (postForgotPasswordPostResp.status == 500) {
       Get.rawSnackbar(message: postForgotPasswordPostResp.message);
     }
     //Get.rawSnackbar(message: "Invalid Email, please enter an existing email");

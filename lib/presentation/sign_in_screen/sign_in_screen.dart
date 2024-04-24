@@ -252,7 +252,7 @@ class SignInScreen extends GetWidget<SignInController> {
   void _onOnTapSignInSuccess() {
     try {
       // Access the accessToken from the data field
-      String? accessToken = controller.postLoginUserResp.data?.accessToken;
+      String? accessToken = controller.postLoginUserResp.result?.accessToken;
 
       if (accessToken != null) {
         // Decode the accessToken payload

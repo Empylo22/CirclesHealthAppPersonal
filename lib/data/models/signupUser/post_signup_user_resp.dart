@@ -1,27 +1,29 @@
 class PostSignupUserResp {
-  bool? status;
-  int? statusCode;
   String? message;
+  int? status;
+  String? result;
+  
 
-  PostSignupUserResp({this.status, this.statusCode, this.message});
+  PostSignupUserResp({this.message, this.status, this.result});
 
   PostSignupUserResp.fromJson(Map<String, dynamic> json) {
-    status = json['status'];
-    statusCode = json['statusCode'];
     message = json['message'];
+    status = json['status'];
+    result = json['result'];
   }
 
   Map<String, dynamic> toJson() {
     final data = <String, dynamic>{};
+   if (message != null) {
+      data['message'] = message;
+    } 
     if (status != null) {
       data['status'] = status;
     }
-    if (statusCode != null) {
-      data['statusCode'] = statusCode;
+    if (result != null) {
+      data['result'] = result;
     }
-    if (message != null) {
-      data['message'] = message;
-    }
+    
     return data;
   }
 }

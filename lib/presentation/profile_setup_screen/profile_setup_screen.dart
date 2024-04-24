@@ -352,7 +352,7 @@ class ProfileSetupScreen extends GetWidget<ProfileSetupController> {
   }
 
   void _onUpdateProfileSuccess() {
-    Get.toNamed(AppRoutes.dailyAssessmentDefaultScreen);
+    Get.toNamed(AppRoutes.homePersonalUserContainerScreen);
     print("Update Profile Success");
   }
 

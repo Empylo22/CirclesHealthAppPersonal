@@ -1,4 +1,5 @@
 import 'package:empylo/presentation/profile_account_page/profile_account_page.dart';
+import 'package:empylo/widgets/custom_icon_button.dart';
 
 import 'controller/profile_personal_user_my_circles_tab_container_controller.dart';
 import 'package:empylo/core/app_export.dart';
@@ -71,12 +72,22 @@ class ProfilePersonalUserMyCirclesTabContainerScreen
           CustomAppBar(
               height: 41.v,
               leadingWidth: 56.h,
-              leading: AppbarLeadingIconbutton(
-                  imagePath: ImageConstant.imgArrowLeftBlack900,
-                  margin: EdgeInsets.only(left: 16.h, bottom: 1.v),
+              leading: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+              padding: EdgeInsets.only(left: 19.h, top: 9.h),
+              child: CustomIconButton(
+                  height: 40.adaptSize,
+                  width: 40.adaptSize,
+                  padding: EdgeInsets.all(12.h),
                   onTap: () {
                     onTapArrowLeft();
-                  }),
+                  },
+                  child: CustomImageView(
+                      imagePath: ImageConstant.imgArrowLeftBlack900))),
+        ],
+      ),
               actions: [
                 Padding(
                     padding: EdgeInsets.only(left: 17.h, top: 1.v, right: 17.h),
