@@ -149,7 +149,7 @@ class ForgotPasswordScreen extends GetWidget<ForgotPasswordController> {
       } on PostForgotPasswordPostResp {
         _onForgotPasswordError();
       } on NoInternetException catch (e) {
-        Get.rawSnackbar(message: e.toString());
+        Get.rawSnackbar(backgroundColor: Colors.red , message: e.toString(), snackPosition: SnackPosition.TOP, );
       } catch (e) {
         //TODO: Handle generic errors
       }
