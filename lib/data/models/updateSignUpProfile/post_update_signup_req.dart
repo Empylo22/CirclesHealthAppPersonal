@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PostUpdateSignUpProfileRequest {
@@ -13,34 +15,45 @@ class PostUpdateSignUpProfileRequest {
   String? address;
   String? disability;
   String? DOB;
+  List<int>? profileImage;
 
-  PostUpdateSignUpProfileRequest(
-      {this.firstName,
-      this.lastName,
-      this.ageRange,
-      this.ethnicity,
-      this.maritalStatus,
-      this.department,
-      this.jobRole,
-      required this.accountType,
-      this.gender,
-      this.address,
-      this.DOB,
-      this.disability});
-  PostUpdateSignUpProfileRequest.fromJson(Map<String, dynamic> json) {
-    firstName = json['firstName'];
-    lastName = json['lastName'];
-    ageRange = json['ageRange'];
-    ethnicity = json['ethnicity'];
-    maritalStatus = json['maritalStatus'];
-    department = json['department'];
-    jobRole = json['jobRole'];
-    accountType = json['accountType'];
-    gender = json['gender'];
-    address = json['address'];
-    disability = json['disability'];
-    DOB = json['DOB'];
+  PostUpdateSignUpProfileRequest({
+    this.firstName,
+    this.lastName,
+    this.ageRange,
+    this.ethnicity,
+    this.maritalStatus,
+    this.department,
+    this.jobRole,
+    required this.accountType,
+    this.gender,
+    this.address,
+    this.disability,
+    this.DOB,
+    this.profileImage,
+  });
+
+  Map<String, dynamic> toJson() {
+    final data = <String, dynamic>{};
+    data['firstName'] = firstName;
+    data['lastName'] = lastName;
+    data['ageRange'] = ageRange;
+    data['ethnicity'] = ethnicity;
+    data['maritalStatus'] = maritalStatus;
+    data['department'] = department;
+    data['jobRole'] = jobRole;
+    data['accountType'] = accountType;
+    data['gender'] = gender;
+    data['address'] = address;
+    data['disability'] = disability;
+    data['DOB'] = DOB;
+    // Convert profileImage to base64 string
+    if (profileImage != null) {
+      data['profileImage'] = base64Encode(profileImage!);
+    }
+    return data;
   }
+
   // Function to get the account type from SharedPreferences
   static Future<String> getAccountType() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -57,43 +70,5 @@ class PostUpdateSignUpProfileRequest {
   static Future<PostUpdateSignUpProfileRequest> getInstance() async {
     String accountType = await getAccountType();
     return PostUpdateSignUpProfileRequest(accountType: accountType);
-  }
-
-  Map<String, dynamic> toJson() {
-    final data = <String, dynamic>{};
-    if (firstName != null) {
-      data['firstName'] = firstName;
-    }
-    if (lastName != null) {
-      data['lastName'] = lastName;
-    }
-    if (ageRange != null) {
-      data['ageRange'] = ageRange;
-    }
-    if (ethnicity != null) {
-      data['ethnicity'] = ethnicity;
-    }
-    if (maritalStatus != null) {
-      data['maritalStatus'] = maritalStatus;
-    }
-    if (department != null) {
-      data['department'] = department;
-    }
-    if (jobRole != null) {
-      data['jobRole'] = jobRole;
-    }
-    if (accountType != null) {
-      data['accountType'] = accountType;
-    }
-    if (gender != null) {
-      data['gender'] = gender;
-    }
-    if (address != null) {
-      data['address'] = address;
-    }
-    if (disability != null) {
-      data['disability'] = disability;
-    }
-    return data;
   }
 }

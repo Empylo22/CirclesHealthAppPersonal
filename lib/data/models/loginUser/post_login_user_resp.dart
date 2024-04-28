@@ -34,7 +34,7 @@ class Result {
 
   Result.fromJson(Map<String, dynamic> json) {
     accessToken = json['accessToken'];
-    user = json['result'] != null ? User.fromJson(json['user']) : null;
+    user = json['user'] != null ? User.fromJson(json['user']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -117,7 +117,7 @@ class User{
   });
 
   User.fromJson(Map<String, dynamic> json){
-       id = json['id'];
+        id = json['id'];
         firstName = json['firstName'];
         lastName = json['lastName'];
         email = json['email'];
@@ -152,8 +152,6 @@ class User{
 
 Map<String, dynamic> toJson() {
   final Map<String, dynamic> data = {};
-
-  
   if (id != null) {
     data['id'] = id;
   }

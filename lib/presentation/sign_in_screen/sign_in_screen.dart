@@ -249,19 +249,23 @@ class SignInScreen extends GetWidget<SignInController> {
   }
 
   /// Navigates to the homePersonalUserContainer1Screen when the action is triggered.
-  void _onOnTapSignInSuccess() {
+  void _onOnTapSignInSuccess() async {
+    Get.rawSnackbar(
+            message: controller.postLoginUserResp.message.toString() ?? '' ,
+            snackPosition: SnackPosition.TOP,
+            backgroundColor: Colors.green);
     try {
-      // Access the accessToken from the data field
+      // Accesses the accessToken from the data field
       String? accessToken = controller.postLoginUserResp.result?.accessToken;
 
-      if (accessToken != null) {
-        // Decode the accessToken payload
+      if (accessToken != null)  {
+        // Decodes the accessToken payload
         Map<String, dynamic> payload = JwtDecoder.decode(accessToken);
-
+        await saveToken(accessToken);
         // Access the accountType, firstName and lastName
-        String? accountType = payload['accountType'];
-        String? firstName = payload['firstName'];
-        String? lastName = payload['lastName'];
+        String? accountType = payload['sub']['accountType'];
+        String? firstName = payload['sub']['firstName'];
+        String? lastName = payload['sub']['lastName'];
 
         if (firstName == null && lastName == null) {
           // If both firstName and lastName are null, navigate to profile setup
@@ -287,22 +291,20 @@ class SignInScreen extends GetWidget<SignInController> {
     }
   }
 
-// Get.toNamed(
-  //   AppRoutes.homePersonalUserContainerScreen,
-  // );
-  // controller.emailController.clear();
-
-  // controller.passwordController.clear();
   /// Displays an alert dialog when the action is triggered.
   /// This function is typically called in response to a API call. It retrieves
   /// the `message` data from the `PostLoginUserResp`
   /// object in the `controller` using the `message` field.
   void _onOnTapSignInError() {
-    Get.defaultDialog(
-        onConfirm: () => Get.back(),
-        title: 'Error',
-        backgroundColor: Colors.deepOrange,
-        middleText: controller.postLoginUserResp.message.toString() ?? '');
+    Get.rawSnackbar(
+            message: controller.postLoginUserResp.message.toString() ?? '' ,
+            snackPosition: SnackPosition.TOP,
+            backgroundColor: Colors.red);
+    // Get.defaultDialog(
+    //     onConfirm: () => Get.back(),
+    //     title: 'Error',
+    //     backgroundColor: Colors.red,
+    //     middleText: controller.postLoginUserResp.message.toString() ?? '');
   }
 
   /// Navigates to the signUpScreen when the action is triggered.

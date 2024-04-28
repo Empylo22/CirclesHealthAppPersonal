@@ -2,7 +2,6 @@ import 'package:empylo/widgets/custom_icon_button.dart';
 import 'package:flutter/material.dart';
 import 'package:empylo/core/app_export.dart';
 import 'package:empylo/core/utils/validation_functions.dart';
-import 'package:empylo/widgets/app_bar/appbar_leading_iconbutton.dart';
 import 'package:empylo/widgets/app_bar/custom_app_bar.dart';
 import 'package:empylo/widgets/custom_elevated_button.dart';
 import 'package:empylo/widgets/custom_text_form_field.dart';
@@ -127,7 +126,7 @@ class ForgotPasswordScreen extends GetWidget<ForgotPasswordController> {
     Get.back();
   }
 
-  /// calls the [https://empylo-app.vercel.app/auth/user/forgot-password] API
+  /// calls the [https://api.empylo.com/auth/user/forgot-password] API
   ///
   /// validates the form input fields and executes the API if all the fields are valid
   /// It has [PostForgotPasswordPostReq] as a parameter which will be passed as a API request body
@@ -146,32 +145,97 @@ class ForgotPasswordScreen extends GetWidget<ForgotPasswordController> {
           postForgotPasswordPostReq.toJson(),
         );
         _onForgotPasswordSuccess();
-      } on PostForgotPasswordPostResp {
-        _onForgotPasswordError();
+      } on PostForgotPasswordPostResp catch (error) {
+        // Handle different status codes
+        if (error.status == 404) {
+          Get.rawSnackbar(
+            message: "Email not found. Please enter a valid email.",
+          );
+        } else if (error.status == 400) {
+          Get.rawSnackbar(
+              message: error.message,
+              snackPosition: SnackPosition.TOP,
+              backgroundColor: Colors.red);
+        } else if (error.status == 500) {
+          Get.rawSnackbar(
+              message:
+                  error.message ?? "An error occurred. Please try again later.",
+              snackPosition: SnackPosition.TOP,
+              backgroundColor: Colors.red);
+        } else {
+          // Handle other status codes if needed
+          Get.rawSnackbar(
+              message: "An error occurred. Please try again later.",
+              snackPosition: SnackPosition.TOP,
+              backgroundColor: Colors.red);
+        }
       } on NoInternetException catch (e) {
-        Get.rawSnackbar(backgroundColor: Colors.red , message: e.toString(), snackPosition: SnackPosition.TOP, );
+        Get.rawSnackbar(
+          backgroundColor: Colors.red,
+          message: e.toString(),
+          snackPosition: SnackPosition.TOP,
+        );
       } catch (e) {
         //TODO: Handle generic errors
       }
     }
   }
 
-  void _onForgotPasswordSuccess() {
-    Get.rawSnackbar(message: "An OTP has been sent to your mail");
+  void _onForgotPasswordSuccess() async {
+    await Get.rawSnackbar(
+        message: "An OTP has been sent to your mail",
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: Colors.green);
     Get.toNamed(AppRoutes.resetCodePopupScreen);
   }
 
-  void _onForgotPasswordError() {
-    PostForgotPasswordPostResp postForgotPasswordPostResp =
-        PostForgotPasswordPostResp();
-
-    if (postForgotPasswordPostResp.status == 404) {
-      Get.rawSnackbar(message: "Email not found. Please enter a valid email.");
-    } else if (postForgotPasswordPostResp.status == 400) {
-      Get.rawSnackbar(message: "Invalid request. Please check your email.");
-    } else if (postForgotPasswordPostResp.status == 500) {
-      Get.rawSnackbar(message: postForgotPasswordPostResp.message);
+  void _onForgotPasswordError(dynamic error) {
+    if (error is PostForgotPasswordPostResp) {
+      if (error.status == 404) {
+        Get.rawSnackbar(
+            message: "Email not found. Please enter a valid email.",
+            snackPosition: SnackPosition.TOP,
+            backgroundColor: Colors.red);
+      } else if (error.status == 400) {
+        Get.rawSnackbar(
+            message: error.message,
+            snackPosition: SnackPosition.TOP,
+            backgroundColor: Colors.red);
+      } else if (error.status == 500) {
+        Get.rawSnackbar(
+            message: error.message,
+            snackPosition: SnackPosition.TOP,
+            backgroundColor: Colors.red);
+      }
+    } else {
+      // Handle other types of errors, if necessary
+      // For example, handle network errors, server errors, etc.
+      Get.rawSnackbar(message: "An error occurred. Please try again later.");
     }
-    //Get.rawSnackbar(message: "Invalid Email, please enter an existing email");
+    void _onForgotPasswordError(PostForgotPasswordPostResp error) {
+      if (error.status == 404) {
+        Get.rawSnackbar(
+            message: "Email not found. Please enter a valid email.",
+            snackPosition: SnackPosition.TOP,
+            backgroundColor: Colors.red);
+      } else if (error.status == 400) {
+        Get.rawSnackbar(
+            message: error.message,
+            snackPosition: SnackPosition.TOP,
+            backgroundColor: Colors.red);
+      } else if (error.status == 500) {
+        Get.rawSnackbar(
+            message:
+                error.message ?? "An error occurred. Please try again later.",
+            snackPosition: SnackPosition.TOP,
+            backgroundColor: Colors.red);
+      } else {
+        // Handle other status codes if needed
+        Get.rawSnackbar(
+            message: "An error occurred. Please try again later.",
+            snackPosition: SnackPosition.TOP,
+            backgroundColor: Colors.red);
+      }
+    }
   }
 }

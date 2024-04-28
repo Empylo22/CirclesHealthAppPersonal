@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:collection/collection.dart';
 import 'package:empylo/core/app_export.dart';
+import 'package:empylo/data/models/forgotPasswordPost/post_forgot_password_post_resp.dart';
 import 'package:empylo/data/models/updateSignUpProfile/post_update_signup_req.dart';
 import 'package:empylo/presentation/profile_setup_screen/models/profile_setup_model.dart';
 import 'package:flutter/material.dart';
@@ -22,14 +23,16 @@ class ProfileSetupController extends GetxController {
   Rx<ProfileSetupModel> locationSetupModelObj = ProfileSetupModel().obs;
   SelectionPopupModel? selectedDropDownValue;
   File? selectedProfilePicture;
+  PostForgotPasswordPostResp postForgotPasswordPostResp = PostForgotPasswordPostResp()  ;
+
 
   void onProfilePictureChange(File? file) {
-    // Update the selected profile picture with the newly selected file
+    
     selectedProfilePicture = file;
 
-    // Optionally, you can trigger a UI update here if needed
-    // For example, call update() if using a StatefulWidget
-    // update();
+  String imagePath = file != null ? file.path : ImageConstant.imgEllipse45;
+
+  update();
   }
   
   @override
@@ -94,7 +97,10 @@ Future<void> callUpdateSignupProfile(File? file) async {
   try {
     // Retrieve filename from shared preferences
     String? filename = await getFileName();
-
+    String? accessToken = await getSavedToken();
+    if (postForgotPasswordPostResp.status != 200) {
+      throw postForgotPasswordPostResp;
+    }
     if (filename != null) {
       // Check if file exists
       File file = File(filename);
@@ -107,14 +113,14 @@ Future<void> callUpdateSignupProfile(File? file) async {
           'gender': selectedGender,
           'address': selectedLocation,
           'accountType': await PostUpdateSignUpProfileRequest.getAccountType(),
-          //'filename': filename,
+          'profileImage' : await file.readAsBytesSync(),
         };
 
         // Call the API to update the signup profile
         await Get.find<ApiClient>().updateSignupProfile(
-          headers: {'Content-type': 'application/json'},
-          requestData: requestData,
-          file: file, // Include the file in the request
+          accessToken: accessToken,
+          headers: {'Content-type': 'multipart/form-data'},
+          requestData: requestData
         );
 
         // Handle the success response

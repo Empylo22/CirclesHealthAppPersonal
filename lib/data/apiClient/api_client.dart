@@ -14,6 +14,7 @@ import 'package:http/http.dart' as http;
 
 class ApiClient extends GetConnect {
   var url = "https://api.empylo.com";
+  PostLoginUserResp postLoginUserResp = PostLoginUserResp();
 
   @override
   void onInit() {
@@ -85,25 +86,28 @@ Future<PatchResetPasswordResp> resetPassword({
   /// with the provided headers and request data
   /// Returns a [PostUpdateSignupProfileResp] object representing the response.
   /// Throws an error if the request fails or an exception occurs.
+  
   Future<PostUpdateSignupProfileResp> updateSignupProfile({
-  Map<String, String> headers = const {
-     'Content-Type': 'application/json',
-  },
+    required String? accessToken,
+  Map<String, String> headers = const {},
   Map requestData = const {},
-  File? file, // parameter for the file
+  File? file,
 }) async {
+  headers['Content-Type'] = 'multipart/form-data';
+  headers['Authorization'] = 'Bearer $accessToken';
   ProgressDialogUtils.showProgressDialog();
 
   try {
     await isNetworkConnected();
-
+    
     // Fetches the saved token
-    String? token = await getSavedToken();
+    String? accessToken = await getSavedToken();
 
-    if (token != null) {
+    if (accessToken != null) {
       // Decodes the token to extract the ID
-      Map<String, dynamic> decodedToken = decodeToken(token);
-      String? userId = decodedToken['id']?.toString();
+      Map<String, dynamic> decodedToken = decodeToken(accessToken);
+      String? userId = decodedToken['sub']['id']?.toString();
+      //String? userId= postLoginUserResp.result?.user?.id?.toString();
 
       if (userId != null) {
         // Constructs the endpoint with the user ID
@@ -111,7 +115,7 @@ Future<PatchResetPasswordResp> resetPassword({
 
         if (file != null) {
           // Create multipart request if file is present
-          var request = http.MultipartRequest('POST', Uri.parse(endpoint));
+          var request = http.MultipartRequest('PATCH', Uri.parse(endpoint));
 
           // Add headers
           request.headers.addAll(headers);
@@ -123,7 +127,7 @@ Future<PatchResetPasswordResp> resetPassword({
 
           // Add file
           request.files.add(
-            await http.MultipartFile.fromPath('filename', file.path),
+            await http.MultipartFile.fromPath('profileImage', file.path),
           );
 
           // Send request and get response
@@ -152,14 +156,13 @@ Future<PatchResetPasswordResp> resetPassword({
           if (_isSuccessCall(response)) {
             return PostUpdateSignupProfileResp.fromJson(jsonDecode(response.body));
           } else {
-            throw response.body != null
-                ? PostUpdateSignupProfileResp.fromJson(jsonDecode(response.body))
-                : 'Something Went Wrong!';
+                    throw 'Request is not proper';
+
           }
         }
       } else {
         ProgressDialogUtils.hideProgressDialog();
-        throw 'User ID not found in the decoded token';
+        throw 'User ID not found in Response';
       }
     }
 
@@ -178,75 +181,6 @@ Future<PatchResetPasswordResp> resetPassword({
   }
 }
 
-  // /// Performs API call for https://api.empylo.com/auth/user/forgot-password
-
-  // ///
-
-  // /// Sends a POST request to the server's 'https://api.empylo.com/auth/user/forgot-password' endpoint
-
-  // /// with the provided headers and request data
-
-  // /// Returns a [PostForgotPasswordPostResp] object representing the response.
-
-  // /// Throws an error if the request fails or an exception occurs.
-
-  // Future<PostForgotPasswordPostResp> forgotPasswordPost({
-
-  //   Map<String, String> headers = const {},
-
-  //   Map requestData = const {},
-
-  // }) async {
-
-  //   ProgressDialogUtils.showProgressDialog();
-
-  //   try {
-
-  //     await isNetworkConnected();
-
-  //     Response response = await httpClient.post(
-
-  //       '$url/auth/user/forgot-password',
-
-  //       headers: headers,
-
-  //       body: requestData,
-
-  //     );
-
-  //     ProgressDialogUtils.hideProgressDialog();
-
-  //     if (_isSuccessCall(response)) {
-
-  //       return PostForgotPasswordPostResp.fromJson(response.body);
-
-  //     } else {
-
-  //       throw response.body != null
-
-  //           ? PostForgotPasswordPostResp.fromJson(response.body)
-
-  //           : 'Something Went Wrong!';
-
-  //     }
-
-  //   } catch (error, stackTrace) {
-
-  //     ProgressDialogUtils.hideProgressDialog();
-
-  //     Logger.log(
-
-  //       error,
-
-  //       stackTrace: stackTrace,
-
-  //     );
-
-  //     rethrow;
-
-  //   }
-
-  // }
   /// Performs API call for https://api.empylo.com/auth/user/forgot-password
   ///
   /// Sends a POST request to the server's 'https://api.empylo.com/auth/user/forgot-password' endpoint

@@ -26,7 +26,7 @@ class SignInController extends GetxController {
     passwordController.dispose();
   }
 
-  /// Calls the https://empylo-app.vercel.app/auth/user/login API with the specified request data.
+  /// Calls the https://api.empylo.com/auth/user/login API with the specified request data.
   ///
   /// The [Map] parameter represents request body
   Future<void> callLoginUser(Map req) async {
@@ -38,12 +38,18 @@ class SignInController extends GetxController {
         requestData: req,
       );
       // Assuming the response structure contains an 'accessToken'
-
+     // int? userId = postLoginUserResp.result?.user?.id;
       String? accessToken = postLoginUserResp.result?.accessToken;
-
+      if (postLoginUserResp.status != 200) {
+      throw postLoginUserResp;
+    }
+      
       if (accessToken != null) {
         // Save the token in SharedPreferences
         await saveToken(accessToken);
+        Map<String, dynamic> decodedToken = decodeToken(accessToken);
+        String? userId = decodedToken['sub']['id']?.toString();
+        print(userId);
         print(accessToken);
         _handleLoginUserSuccess();
       }

@@ -48,7 +48,7 @@ class ProfileSetupScreen extends GetWidget<ProfileSetupController> {
                         child:
                             Stack(alignment: Alignment.bottomRight, children: [
                           CustomImageView(
-                              imagePath: ImageConstant.imgEllipse45,
+                              imagePath: controller.selectedProfilePicture?.path ?? ImageConstant.imgEllipse45,
                               height: 106.adaptSize,
                               width: 106.adaptSize,
                               radius: BorderRadius.circular(53.h),
@@ -76,6 +76,11 @@ class ProfileSetupScreen extends GetWidget<ProfileSetupController> {
                                 style: theme.textTheme.labelLarge))),
                     SizedBox(height: 3.v),
                     CustomTextFormField(
+                      validator: (value) {
+                          return value != null
+                              ? null
+                              : 'Please enter your date of birth';
+                        },
                       controller: controller.dateofbirthController,
                       textInputAction: TextInputAction.done,
                       hintText: "lbl_mm_dd_yyyy".tr,
@@ -104,6 +109,11 @@ class ProfileSetupScreen extends GetWidget<ProfileSetupController> {
                                 style: theme.textTheme.labelLarge))),
                     SizedBox(height: 2.v),
                     CustomDropDown(
+                        validator: (value) {
+                          return value != null
+                              ? null
+                              : 'Please select your gender';
+                        },
                         icon: Container(
                             margin: EdgeInsets.fromLTRB(30.h, 6.v, 8.h, 6.v),
                             child: CustomImageView(
@@ -182,13 +192,13 @@ class ProfileSetupScreen extends GetWidget<ProfileSetupController> {
               child: Padding(
                   padding: EdgeInsets.only(right: 4.h),
                   child: CustomTextFormField(
-                    autofocus: false,
+                      autofocus: false,
                       controller: controller.pepiconspencilpenController,
                       hintText: "lbl_first_name".tr,
                       hintStyle: CustomTextStyles.bodySmallBluegray40001,
                       validator: (value) {
-                        if (!isText(value)) {
-                          return "err_msg_please_enter_valid_text".tr;
+                        if (!isText(value, isRequired: true)) {
+                          return "Please enter your firstname".tr;
                         }
                         return null;
                       },
@@ -203,8 +213,8 @@ class ProfileSetupScreen extends GetWidget<ProfileSetupController> {
                       hintStyle: CustomTextStyles.bodySmallBluegray40001,
                       textInputAction: TextInputAction.done,
                       validator: (value) {
-                        if (!isText(value)) {
-                          return "err_msg_please_enter_valid_text".tr;
+                        if (!isText(value, isRequired: true )) {
+                          return "Please enter your lastname".tr;
                         }
                         return null;
                       },
@@ -236,6 +246,9 @@ class ProfileSetupScreen extends GetWidget<ProfileSetupController> {
   /// Common widget
   Widget _buildFourteen() {
     return CustomDropDown(
+        validator: (value) {
+          return value != null ? null : 'Please select your location';
+        },
         icon: Container(
             margin: EdgeInsets.fromLTRB(30.h, 6.v, 8.h, 6.v),
             child: CustomImageView(
@@ -257,39 +270,18 @@ class ProfileSetupScreen extends GetWidget<ProfileSetupController> {
         });
   }
 
-  /// Displays a dialog with the [EditProfilePicturePopupDialog] content.
-  onTapBtnUser() async {
-    final pickedFile =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      File file = File(pickedFile.path);
-      controller.onProfilePictureChange(file);
+  
+   onTapBtnUser() async {
+    await ImagePicker().pickImage(source: ImageSource.gallery).then((value) async {
+      if (value != null) {
+        controller.selectedProfilePicture = File(value.path);
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setString('filename', value.path);
+      ('File picked and saved: ${value.path}');
+//controller.selectedProfilePicture!(value.path);
+
       }
-    // showDialog(
-    //     context: context,
-    //     builder: (context) => AlertDialog(
-    //       backgroundColor: Colors.transparent,
-    //   contentPadding: EdgeInsets.zero,
-    //   insetPadding: const EdgeInsets.only(left: 0),
-    //           content: EditProfilePicturePopupDialog(
-    //               EditProfilePicturePopupController()),
-    //         ));
-    Get.dialog(AlertDialog(
-       backgroundColor: Colors.transparent,
-       contentPadding: EdgeInsets.zero,
-       insetPadding: const EdgeInsets.only(left: 0),
-       content: EditProfilePicturePopupDialog(
-         Get.put(
-           EditProfilePicturePopupController(
-             onProfilePictureChange: controller.onProfilePictureChange,
-            //   onProfilePictureChange: (file) {
-            //  if (file != null) {
-            //     controller.onProfilePictureChange(file);}
-            // },
-          ),
-         ),
-       ),
-     ));
+    });
   }
 
   /// Navigates to the previous screen.
@@ -306,7 +298,6 @@ class ProfileSetupScreen extends GetWidget<ProfileSetupController> {
 
         if (profilePictureFile == null) {
           // Handle case where no profile picture is selected
-          // Optionally, you can show a message to the user
           Get.rawSnackbar(
               message: 'Please choose a valid Image',
               snackPosition: SnackPosition.TOP,
@@ -316,14 +307,7 @@ class ProfileSetupScreen extends GetWidget<ProfileSetupController> {
         PostUpdateSignUpProfileRequest data =
             await PostUpdateSignUpProfileRequest.getInstance();
 
-        // data.firstName = controller.pepiconspencilpenController.text;
-        // data.DOB = controller.dateofbirthController.text;
-        // data.gender = controller.selectedGender;
-        // data.address = controller.selectedLocation as String?;
-        // data.accountType = await PostUpdateSignUpProfileRequest.getAccountType();
-        // //data.filename = await uploadProfilePicture(profilePictureFile);
-        // // Updates account type based on user interaction
-
+        // Updates account type based on user interaction
         await PostUpdateSignUpProfileRequest.updateAccountType('personalUser');
 
         // Create an instance of File by picking the file
@@ -331,6 +315,9 @@ class ProfileSetupScreen extends GetWidget<ProfileSetupController> {
 
         if (pickedFile != null) {
           File file = File(pickedFile.path);
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          await prefs.setString('filename', pickedFile.path);
+          print('File picked and saved: ${pickedFile.path}');
 
           // Call the method to update the signup profile
           await controller.callUpdateSignupProfile(file);
@@ -352,6 +339,10 @@ class ProfileSetupScreen extends GetWidget<ProfileSetupController> {
   }
 
   void _onUpdateProfileSuccess() {
+    Get.rawSnackbar(
+        message: 'Profile Updated Successfully',
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: Colors.green);
     Get.toNamed(AppRoutes.homePersonalUserContainerScreen);
     print("Update Profile Success");
   }
@@ -373,7 +364,6 @@ class ProfileSetupScreen extends GetWidget<ProfileSetupController> {
       middleText: 'Failed to update profile. Please try again.',
       actions: [
         TextButton(
-          //style: ButtonStyle(backgroundColor: Colors.g),
           onPressed: () {
             // Navigate to the home screen
             Get.toNamed(AppRoutes.homePersonalUserContainerScreen);
