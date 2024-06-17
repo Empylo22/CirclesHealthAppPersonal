@@ -4,7 +4,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:empylo/presentation/edit_profile_picture_popup_dialog/models/edit_profile_picture_popup_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
 class EditProfilePicturePopupController {
   Rx<EditProfilePicturePopupModel> editProfilePicturePopupModelObj =
       EditProfilePicturePopupModel().obs;
@@ -48,4 +47,3 @@ class EditProfilePicturePopupController {
     }
   }
 }
-

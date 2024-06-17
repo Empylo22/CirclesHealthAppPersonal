@@ -1,5 +1,4 @@
 import 'package:jwt_decoder/jwt_decoder.dart';
-
 import 'controller/sign_in_controller.dart';
 import 'package:empylo/core/app_export.dart';
 import 'package:empylo/core/utils/validation_functions.dart';
@@ -24,6 +23,7 @@ class SignInScreen extends GetWidget<SignInController> {
             body: SizedBox(
                 width: SizeUtils.width,
                 child: SingleChildScrollView(
+                    reverse: true,
                     padding: EdgeInsets.only(
                         bottom: MediaQuery.of(context).viewInsets.bottom),
                     child: Form(
@@ -152,7 +152,25 @@ class SignInScreen extends GetWidget<SignInController> {
                                   onPressed: () {
                                     onTapSignIn();
                                   }),
-                              SizedBox(height: 32.v),
+                              SizedBox(height: 15.v),
+                              GestureDetector(
+                                  onTap: () {
+                                    onTapVerifyAccount();
+                                  },
+                                  child: RichText(
+                                      text: TextSpan(children: [
+                                        TextSpan(
+                                            text: "Want to verify your account?"
+                                                .tr,
+                                            style: CustomTextStyles
+                                                .titleSmallff191919),
+                                        TextSpan(
+                                            text: "Click here".tr,
+                                            style: CustomTextStyles
+                                                .titleSmallffffb347)
+                                      ]),
+                                      textAlign: TextAlign.left)),
+                              SizedBox(height: 15.v),
                               Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
@@ -251,14 +269,14 @@ class SignInScreen extends GetWidget<SignInController> {
   /// Navigates to the homePersonalUserContainer1Screen when the action is triggered.
   void _onOnTapSignInSuccess() async {
     Get.rawSnackbar(
-            message: controller.postLoginUserResp.message.toString() ?? '' ,
-            snackPosition: SnackPosition.TOP,
-            backgroundColor: Colors.green);
+        message: controller.postLoginUserResp.message.toString(),
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: Colors.green);
     try {
       // Accesses the accessToken from the data field
       String? accessToken = controller.postLoginUserResp.result?.accessToken;
 
-      if (accessToken != null)  {
+      if (accessToken != null) {
         // Decodes the accessToken payload
         Map<String, dynamic> payload = JwtDecoder.decode(accessToken);
         await saveToken(accessToken);
@@ -297,9 +315,9 @@ class SignInScreen extends GetWidget<SignInController> {
   /// object in the `controller` using the `message` field.
   void _onOnTapSignInError() {
     Get.rawSnackbar(
-            message: controller.postLoginUserResp.message.toString() ?? '' ,
-            snackPosition: SnackPosition.TOP,
-            backgroundColor: Colors.red);
+        message: controller.postLoginUserResp.message.toString(),
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: Colors.red);
     // Get.defaultDialog(
     //     onConfirm: () => Get.back(),
     //     title: 'Error',
@@ -312,6 +330,11 @@ class SignInScreen extends GetWidget<SignInController> {
     Get.toNamed(
       AppRoutes.signUpScreen,
     );
+  }
+
+  //Navigates to the Verify Account screen
+  onTapVerifyAccount() {
+    Get.toNamed(AppRoutes.signInVerifictionScreen);
   }
 
   /// Navigates to the forgotPasswordScreen when the action is triggered.

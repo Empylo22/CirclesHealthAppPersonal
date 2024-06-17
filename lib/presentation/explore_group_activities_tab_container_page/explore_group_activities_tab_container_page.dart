@@ -97,18 +97,17 @@ class ExploreGroupActivitiesTabContainerPage extends StatelessWidget {
                 fontFamily: 'Switzer Variable',
                 fontWeight: FontWeight.w500),
             indicator: BoxDecoration(
-                color: appTheme.whiteA700,
-                borderRadius: BorderRadius.circular(19.h),
-                border: Border.all(color: appTheme.gray300, width: 1.h),
-                boxShadow: [
-                  BoxShadow(
-                      color: appTheme.gray300.withOpacity(0.3),
-                      spreadRadius: 2.h,
-                      blurRadius: 2.h,
-                      offset: Offset(0, 4))
-                ],
-                
-                ),
+              color: appTheme.whiteA700,
+              borderRadius: BorderRadius.circular(19.h),
+              border: Border.all(color: appTheme.gray300, width: 1.h),
+              boxShadow: [
+                BoxShadow(
+                    color: appTheme.gray300.withOpacity(0.3),
+                    spreadRadius: 2.h,
+                    blurRadius: 2.h,
+                    offset: Offset(0, 4))
+              ],
+            ),
             tabs: [
               Tab(child: Text("msg_self_development".tr)),
               Tab(child: Text("msg_group_activities".tr))

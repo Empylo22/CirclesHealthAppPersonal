@@ -4,7 +4,7 @@ import 'package:empylo/widgets/custom_elevated_button.dart';
 import 'package:flutter/material.dart';
 
 class ResetSuccessfulScreen extends GetWidget<ResetSuccessfulController> {
- const ResetSuccessfulScreen({Key? key}) : super(key: key);
+  const ResetSuccessfulScreen({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -13,7 +13,8 @@ class ResetSuccessfulScreen extends GetWidget<ResetSuccessfulController> {
             body: Center(
               child: Container(
                   width: 359.h,
-                  padding: EdgeInsets.symmetric(horizontal: 27.h, vertical: 37.v),
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 27.h, vertical: 37.v),
                   child: Column(children: [
                     CustomImageView(
                         imagePath: ImageConstant.imgImageProcessin,

@@ -1,16 +1,11 @@
 import 'dart:io';
-
 import 'package:empylo/data/models/updateSignUpProfile/post_update_signup_req.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../../core/utils/validation_functions.dart';
 import '../../data/models/updateSignUpProfile/post_update_signup_resp.dart';
-import '../edit_profile_picture_popup_dialog/controller/edit_profile_picture_popup_controller.dart';
-import '../edit_profile_picture_popup_dialog/edit_profile_picture_popup_dialog.dart';
 import 'controller/profile_setup_controller.dart';
 import 'package:empylo/core/app_export.dart';
-import 'package:empylo/widgets/app_bar/appbar_leading_iconbutton.dart';
 import 'package:empylo/widgets/app_bar/custom_app_bar.dart';
 import 'package:empylo/widgets/custom_drop_down.dart';
 import 'package:empylo/widgets/custom_elevated_button.dart';
@@ -48,7 +43,9 @@ class ProfileSetupScreen extends GetWidget<ProfileSetupController> {
                         child:
                             Stack(alignment: Alignment.bottomRight, children: [
                           CustomImageView(
-                              imagePath: controller.selectedProfilePicture?.path ?? ImageConstant.imgEllipse45,
+                              imagePath:
+                                  controller.selectedProfilePicture?.path ??
+                                      ImageConstant.imgEllipse45,
                               height: 106.adaptSize,
                               width: 106.adaptSize,
                               radius: BorderRadius.circular(53.h),
@@ -77,10 +74,10 @@ class ProfileSetupScreen extends GetWidget<ProfileSetupController> {
                     SizedBox(height: 3.v),
                     CustomTextFormField(
                       validator: (value) {
-                          return value != null
-                              ? null
-                              : 'Please enter your date of birth';
-                        },
+                        return value != null
+                            ? null
+                            : 'Please enter your date of birth';
+                      },
                       controller: controller.dateofbirthController,
                       textInputAction: TextInputAction.done,
                       hintText: "lbl_mm_dd_yyyy".tr,
@@ -213,7 +210,7 @@ class ProfileSetupScreen extends GetWidget<ProfileSetupController> {
                       hintStyle: CustomTextStyles.bodySmallBluegray40001,
                       textInputAction: TextInputAction.done,
                       validator: (value) {
-                        if (!isText(value, isRequired: true )) {
+                        if (!isText(value, isRequired: true)) {
                           return "Please enter your lastname".tr;
                         }
                         return null;
@@ -270,16 +267,16 @@ class ProfileSetupScreen extends GetWidget<ProfileSetupController> {
         });
   }
 
-  
-   onTapBtnUser() async {
-    await ImagePicker().pickImage(source: ImageSource.gallery).then((value) async {
+  onTapBtnUser() async {
+    await ImagePicker()
+        .pickImage(source: ImageSource.gallery)
+        .then((value) async {
       if (value != null) {
         controller.selectedProfilePicture = File(value.path);
         SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.setString('filename', value.path);
-      ('File picked and saved: ${value.path}');
+        await prefs.setString('filename', value.path);
+        ('File picked and saved: ${value.path}');
 //controller.selectedProfilePicture!(value.path);
-
       }
     });
   }
@@ -297,7 +294,7 @@ class ProfileSetupScreen extends GetWidget<ProfileSetupController> {
         File? profilePictureFile = controller.selectedProfilePicture;
 
         if (profilePictureFile == null) {
-          // Handle case where no profile picture is selected
+          // Handles case where no profile picture is selected
           Get.rawSnackbar(
               message: 'Please choose a valid Image',
               snackPosition: SnackPosition.TOP,

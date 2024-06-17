@@ -18,7 +18,8 @@ class ResetCodePopupScreen extends GetWidget<ResetCodePopupController> {
             body: Center(
               child: Container(
                   width: 359.h,
-                  padding: EdgeInsets.symmetric(horizontal: 27.h, vertical: 24.v),
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 27.h, vertical: 24.v),
                   child: Column(children: [
                     Text("lbl_code".tr, style: theme.textTheme.headlineSmall),
                     SizedBox(height: 13.v),
@@ -61,26 +62,15 @@ class ResetCodePopupScreen extends GetWidget<ResetCodePopupController> {
 
   /// Navigates to the resetPasswordScreen when the action is triggered.
   onTapVerify() async {
-     // Retrieve OTP from the controller
+    // Retrieve OTP from the controller
     String otp = controller.otpController.value.text;
     // Save OTP to shared preferences
     await saveOtp(otp);
+    print(otp);
     Get.toNamed(
       AppRoutes.resetPasswordScreen,
     );
   }
-   /// Save OTP to shared preferences
-  Future <void> saveOtp(String otp) async {
-    // Get shared preferences instance
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    // Save OTP to shared preferences
-    await prefs.setString('otp', otp);
-  }
-  Future<String?> getSavedOtp() async {
 
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-
-  return prefs.getString('otp');
-
-}
+  /// Save OTP to shared preferences
 }

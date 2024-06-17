@@ -8,8 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../data/apiClient/api_client.dart';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
 
 /// A controller class for the ProfileSetupScreen.
 ///
@@ -23,18 +21,17 @@ class ProfileSetupController extends GetxController {
   Rx<ProfileSetupModel> locationSetupModelObj = ProfileSetupModel().obs;
   SelectionPopupModel? selectedDropDownValue;
   File? selectedProfilePicture;
-  PostForgotPasswordPostResp postForgotPasswordPostResp = PostForgotPasswordPostResp()  ;
-
+  PostForgotPasswordPostResp postForgotPasswordPostResp =
+      PostForgotPasswordPostResp();
 
   void onProfilePictureChange(File? file) {
-    
     selectedProfilePicture = file;
 
-  String imagePath = file != null ? file.path : ImageConstant.imgEllipse45;
+    String imagePath = file != null ? file.path : ImageConstant.imgEllipse45;
 
-  update();
+    update();
   }
-  
+
   @override
   void onClose() {
     super.onClose();
@@ -74,76 +71,70 @@ class ProfileSetupController extends GetxController {
     locationSetupModelObj.value.locationDropdownItemList.refresh();
   }
 
-
 // Function to pick and save file in shared preferences
-Future<void> pickAndSaveFile() async {
-  final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
-  if (pickedFile != null) {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('filename', pickedFile.path);
-    print('File picked and saved: ${pickedFile.path}');
-  } else {
-    print('No file picked.');
+  Future<void> pickAndSaveFile() async {
+    final pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setString('filename', pickedFile.path);
+      print('File picked and saved: ${pickedFile.path}');
+    } else {
+      print('No file picked.');
+    }
   }
-}
 
 // Function to get the filename from shared preferences
-Future<String?> getFileName() async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  return prefs.getString('filename');
-}
-
-Future<void> callUpdateSignupProfile(File? file) async {
-  try {
-    // Retrieve filename from shared preferences
-    String? filename = await getFileName();
-    String? accessToken = await getSavedToken();
-    if (postForgotPasswordPostResp.status != 200) {
-      throw postForgotPasswordPostResp;
-    }
-    if (filename != null) {
-      // Check if file exists
-      File file = File(filename);
-      if (await file.exists()) {
-        // Create the request data with the necessary fields
-        final requestData = {
-          'firstName': pepiconspencilpenController.text,
-          'lastName': lastnameController.text,
-          'DOB': dateofbirthController.text,
-          'gender': selectedGender,
-          'address': selectedLocation,
-          'accountType': await PostUpdateSignUpProfileRequest.getAccountType(),
-          'profileImage' : await file.readAsBytesSync(),
-        };
-
-        // Call the API to update the signup profile
-        await Get.find<ApiClient>().updateSignupProfile(
-          accessToken: accessToken,
-          headers: {'Content-type': 'multipart/form-data'},
-          requestData: requestData
-        );
-
-        // Handle the success response
-        _handleUpdateSignupProfileSuccess();
-      } else {
-        print('File does not exist at path: $filename');
-      }
-    } else {
-      print('Filename not found in shared preferences');
-    }
-  } catch (e) {
-    // Re-throw the exception to handle it at a higher level if needed
-    print(e);
-    rethrow;
+  Future<String?> getFileName() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('filename');
   }
-}
 
+  Future<void> callUpdateSignupProfile(File? file) async {
+    try {
+      // Retrieve filename from shared preferences
+      String? filename = await getFileName();
+      String? accessToken = await getSavedToken();
+      if (postForgotPasswordPostResp.status != 200) {
+        throw postForgotPasswordPostResp;
+      }
+      if (filename != null) {
+        // Check if file exists
+        File file = File(filename);
+        if (await file.exists()) {
+          // Create the request data with the necessary fields
+          final requestData = {
+            'firstName': pepiconspencilpenController.text,
+            'lastName': lastnameController.text,
+            'DOB': dateofbirthController.text,
+            'gender': selectedGender,
+            'address': selectedLocation,
+            'accountType':
+                await PostUpdateSignUpProfileRequest.getAccountType(),
+            'profileImage': await file.readAsBytesSync(),
+          };
+
+          // Call the API to update the signup profile
+          await Get.find<ApiClient>().updateSignupProfile(
+              accessToken: accessToken,
+              headers: {'Content-type': 'multipart/form-data'},
+              requestData: requestData);
+
+          // Handle the success response
+          _handleUpdateSignupProfileSuccess();
+        } else {
+          print('File does not exist at path: $filename');
+        }
+      } else {
+        print('Filename not found in shared preferences');
+      }
+    } catch (e) {
+      // Re-throw the exception to handle it at a higher level if needed
+      print(e);
+      rethrow;
+    }
+  }
 
 // Handles the success response for updating the signup profile
-  void _handleUpdateSignupProfileSuccess() {
-    
-  }
-
-  
-
+  void _handleUpdateSignupProfileSuccess() {}
 }

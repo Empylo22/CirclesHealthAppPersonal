@@ -19,44 +19,44 @@ class ExploreSelfDevelopmentPage extends StatelessWidget {
     return SafeArea(
         child: Scaffold(
             body: SingleChildScrollView(
-              child: Container(
-                  width: double.maxFinite,
-                  decoration: AppDecoration.fillGray,
-                  child: Column(children: [
-                    SizedBox(height: 13.v),
-                    Padding(
-                        padding: EdgeInsets.only(left: 16.h),
-                        child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              _buildRecommendedActivitiesFrame(),
-                              SizedBox(height: 12.v),
-                              _buildUserProfileList(),
-                              SizedBox(height: 11.v),
-                              Text("msg_daily_affirmations".tr,
-                                  style: CustomTextStyles.titleSmallOnPrimary),
-                              SizedBox(height: 7.v),
-                              _buildFrame(),
-                              SizedBox(height: 13.v),
-                              _buildUserProfileList1()
-                            ]))
-                  ])),
-            )));
+      child: Container(
+          width: double.maxFinite,
+          decoration: AppDecoration.fillGray,
+          child: Column(children: [
+            SizedBox(height: 13.v),
+            Padding(
+                padding: EdgeInsets.only(left: 16.h),
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildRecommendedActivitiesFrame(),
+                      SizedBox(height: 12.v),
+                      _buildUserProfileList(),
+                      SizedBox(height: 11.v),
+                      Text("msg_daily_affirmations".tr,
+                          style: CustomTextStyles.titleSmallOnPrimary),
+                      SizedBox(height: 7.v),
+                      _buildFrame(),
+                      SizedBox(height: 13.v),
+                      _buildUserProfileList1()
+                    ]))
+          ])),
+    )));
   }
 
   /// Section Widget
   Widget _buildRecommendedActivitiesFrame() {
     return Padding(
         padding: EdgeInsets.only(right: 6.h),
-        child:
-            Expanded(
-              child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                        Text("msg_recommended_activities".tr,
+        child: Expanded(
+          child:
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+            Text("msg_recommended_activities".tr,
                 style: CustomTextStyles.titleSmallOnPrimary),
-                        Text("lbl_see_all".tr,
+            Text("lbl_see_all".tr,
                 style: CustomTextStyles.titleSmallOnPrimaryContainer)
-                      ]),
-            ));
+          ]),
+        ));
   }
 
   /// Section Widget

@@ -1,7 +1,10 @@
-import 'package:empylo/core/app_export.dart';import 'package:empylo/presentation/notifications_screen/models/notifications_model.dart';/// A controller class for the NotificationsScreen.
+import 'package:empylo/core/app_export.dart';
+import 'package:empylo/presentation/notifications_screen/models/notifications_model.dart';
+
+/// A controller class for the NotificationsScreen.
 ///
 /// This class manages the state of the NotificationsScreen, including the
 /// current notificationsModelObj
-class NotificationsController extends GetxController {Rx<NotificationsModel> notificationsModelObj = NotificationsModel().obs;
-
- }
+class NotificationsController extends GetxController {
+  Rx<NotificationsModel> notificationsModelObj = NotificationsModel().obs;
+}

@@ -24,8 +24,11 @@
     <application
         android:appComponentFactory="androidx.core.app.CoreComponentFactory"
         android:debuggable="true"
+        android:enableOnBackInvokedCallback="true"
         android:icon="@mipmap/ic_launcher"
         android:label="empylo" >
+
+        <!-- Other configurations and activities -->
         <activity
             android:name="com.empylo.app.MainActivity"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
@@ -58,7 +61,7 @@
             </intent-filter>
         </activity>
         <!--
-             Don't delete the meta-data below.
+ Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java
         -->
         <meta-data
@@ -73,7 +76,19 @@
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/flutter_image_picker_file_paths" />
-        </provider>
+        </provider> <!-- Trigger Google Play services to install the backported photo picker module. -->
+        <service
+            android:name="com.google.android.gms.metadata.ModuleDependencies"
+            android:enabled="false"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="com.google.android.gms.metadata.MODULE_DEPENDENCIES" />
+            </intent-filter>
+
+            <meta-data
+                android:name="photopicker_activity:0:required"
+                android:value="" />
+        </service>
 
         <activity
             android:name="com.google.android.gms.auth.api.signin.internal.SignInHubActivity"

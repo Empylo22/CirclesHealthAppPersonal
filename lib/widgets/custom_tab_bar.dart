@@ -37,7 +37,8 @@ class _MyPainter extends BoxPainter {
     final double center = rect.center.dx;
     final double left = center - (indicatorWidth / 2);
     final double right = center + (indicatorWidth / 2);
-    final double top = rect.bottom - 2; // Adjust the top position of the indicator
+    final double top =
+        rect.bottom - 2; // Adjust the top position of the indicator
     final double bottom = rect.bottom;
 
     final Rect indicatorRect = Rect.fromLTRB(left, top, right, bottom);

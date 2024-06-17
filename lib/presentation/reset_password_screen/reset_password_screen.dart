@@ -2,6 +2,7 @@ import 'package:empylo/data/models/resetPassword/patch_reset_password_resp.dart'
 import 'package:empylo/presentation/reset_successful_screen/controller/reset_successful_controller.dart';
 import 'package:empylo/presentation/reset_successful_screen/reset_successful_screen.dart';
 import 'package:empylo/widgets/custom_icon_button.dart';
+import 'package:empylo/widgets/custom_pin_code_text_field.dart';
 
 import 'controller/reset_password_controller.dart';
 import 'package:empylo/core/app_export.dart';
@@ -55,6 +56,13 @@ class ResetPasswordScreen extends GetWidget<ResetPasswordController> {
                                               style: CustomTextStyles
                                                   .bodyMediumRegular))),
                                   SizedBox(height: 20.v),
+                                  Padding(
+                                      padding: EdgeInsets.only(
+                                          left: 13.h, right: 12.h),
+                                      child: Obx(() => CustomPinCodeTextField(
+                                          context: Get.context!,
+                                          controller: controller.otpController,
+                                          onChanged: (value) {}))),
                                   Padding(
                                       padding: EdgeInsets.only(left: 12.h),
                                       child: Text("lbl_password".tr,
@@ -220,39 +228,36 @@ class ResetPasswordScreen extends GetWidget<ResetPasswordController> {
   /// Navigates to the resetSuccessfulScreen when the action is triggered.
   /// calls the [https://api.empylo.com/auth/password-reset] API
 
-/// It has [PatchResetPasswordReq] as a parameter which will be passed as a API request body /// If the call is successful, the function calls the_onReset PasswordSuccess() function.
+  /// It has [PatchResetPasswordReq] as a parameter which will be passed as a API request body /// If the call is successful, the function calls the_onReset PasswordSuccess() function.
 
-/// If the call fails, the function calls the onReset PasswordError() function.
+  /// If the call fails, the function calls the onReset PasswordError() function.
 
-/// Throws a "NoInternetException if there is no internet connection.
+  /// Throws a "NoInternetException if there is no internet connection.
 
-Future<void> onTapResetPassword() async {
+  Future<void> onTapResetPassword() async {
+    if (_formKey.currentState!.validate()) {
+      try {
+        Map<String, dynamic> requestData = {
+          'token': controller.otpController.text,
+          'newPassword': controller.passwordController.text,
+        };
+        await controller.callResetPassword(requestData);
 
-try {
-
-await controller.callResetPassword();
-
-_onResetPasswordSuccess();
-
-} on PatchResetPasswordResp {
-
-_onResetPasswordError();
-
-} on NoInternetException catch (e) {
-
-Get.rawSnackbar(message: e.toString());
-
-} catch (e) {
-
+        _onResetPasswordSuccess();
+      } on PatchResetPasswordResp {
+        _onResetPasswordError();
+      } on NoInternetException catch (e) {
+        Get.rawSnackbar(message: e.toString());
+      } catch (e) {
 //TODO: Handle generic errors
+      }
+    }
+  }
 
-}
-}
-/// Displays a dialog with the [EditProfilePicturePopupDialog] content.
+  /// Displays a dialog with the [EditProfilePicturePopupDialog] content.
 
-void _onResetPasswordSuccess() {
-
-Get.toNamed(AppRoutes.resetSuccessfulScreen);
+  void _onResetPasswordSuccess() {
+    Get.toNamed(AppRoutes.resetSuccessfulScreen);
 // Get.dialog(AlertDialog(
 
 // backgroundColor: Colors.transparent,
@@ -271,21 +276,19 @@ Get.toNamed(AppRoutes.resetSuccessfulScreen);
 // ),
 
 // ));
-
-}
+  }
 
 // Displays a snackBar message when the action is triggered.
 
+  /// The message is obtained from the 'PatchResetPasswordResp object
 
-/// The message is obtained from the 'PatchResetPasswordResp object
+  ///in the controller instance.
 
-///in the controller instance.
-
-void _onResetPasswordError() {
-
-Get.rawSnackbar(
-
-message: controller.patchResetPasswordResp.message.toString() ?? '');
-
-}
+  void _onResetPasswordError() {
+    Get.rawSnackbar(
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: Colors.red,
+        message: controller.patchResetPasswordResp.message.toString() ??
+            'Something Went Wrong');
+  }
 }

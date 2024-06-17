@@ -9,7 +9,7 @@ import 'package:empylo/presentation/sign_up_user_selection_screen/models/sign_up
 class SignUpUserSelectionController extends GetxController {
   Rx<SignUpUserSelectionModel> signUpUserSelectionModelObj =
       SignUpUserSelectionModel().obs;
-      void updateUserType(String userType) async {
+  void updateUserType(String userType) async {
     await PostUpdateSignUpProfileRequest.updateAccountType(userType);
   }
 }

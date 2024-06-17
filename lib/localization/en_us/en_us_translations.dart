@@ -453,7 +453,7 @@ final Map<String, String> enUs = {
   "msg_network_err": "Network Error",
   "msg_something_went_wrong": "Something Went Wrong!",
 
-	// Validation Error String
+  // Validation Error String
   "err_msg_please_enter_valid_email": "Please enter valid email",
   "err_msg_please_enter_valid_password": "Please enter valid password",
   "err_msg_please_enter_valid_text": "Please enter valid text",

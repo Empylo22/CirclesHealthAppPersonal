@@ -9,21 +9,20 @@ class PostForgotPasswordPostResp {
     message = json['message'];
     status = json['status'];
     result = json['result'];
-    
   }
 
   Map<String, dynamic> toJson() {
     final data = <String, dynamic>{};
-   if (message != null) {
+    if (message != null) {
       data['message'] = message;
-    } 
+    }
     if (status != null) {
       data['status'] = status;
     }
     if (result != null) {
       data['result'] = result;
     }
-    
+
     return data;
   }
 }

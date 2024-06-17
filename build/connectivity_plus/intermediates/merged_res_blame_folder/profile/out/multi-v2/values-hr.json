@@ -1,0 +1,34 @@
+{
+    "logs": [
+        {
+            "outputFile": "dev.fluttercommunity.plus.connectivity.connectivity_plus-mergeProfileResources-2:/values-hr/values-hr.xml",
+            "map": [
+                {
+                    "source": "C:\\Users\\Owner\\.gradle\\caches\\transforms-3\\7fe0c4edf785dd96259aa3600ae4eebb\\transformed\\core-1.6.0\\res\\values-hr\\values-hr.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "100",
+                        "endOffsets": "151"
+                    }
+                }
+            ]
+        },
+        {
+            "outputFile": "dev.fluttercommunity.plus.connectivity.connectivity_plus-merged_res-4:/values-hr/values-hr.xml",
+            "map": [
+                {
+                    "source": "C:\\Users\\Owner\\.gradle\\caches\\transforms-3\\7fe0c4edf785dd96259aa3600ae4eebb\\transformed\\core-1.6.0\\res\\values-hr\\values-hr.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "100",
+                        "endOffsets": "151"
+                    }
+                }
+            ]
+        }
+    ]
+}

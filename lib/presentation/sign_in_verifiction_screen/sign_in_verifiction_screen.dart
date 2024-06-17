@@ -1,6 +1,6 @@
+import 'package:empylo/widgets/custom_icon_button.dart';
 import 'controller/sign_in_verifiction_controller.dart';
 import 'package:empylo/core/app_export.dart';
-import 'package:empylo/widgets/app_bar/appbar_leading_iconbutton.dart';
 import 'package:empylo/widgets/app_bar/custom_app_bar.dart';
 import 'package:empylo/widgets/custom_elevated_button.dart';
 import 'package:empylo/widgets/custom_pin_code_text_field.dart';
@@ -81,13 +81,24 @@ class SignInVerifictionScreen extends GetWidget<SignInVerifictionController> {
   /// Section Widget
   PreferredSizeWidget _buildAppBar() {
     return CustomAppBar(
-        leadingWidth: double.maxFinite,
-        leading: AppbarLeadingIconbutton(
-            imagePath: ImageConstant.imgArrowLeftBlack900,
-            margin: EdgeInsets.fromLTRB(16.h, 8.v, 337.h, 8.v),
-            onTap: () {
-              onTapArrowLeft();
-            }));
+      leadingWidth: double.maxFinite,
+      leading: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+              padding: EdgeInsets.only(left: 19.h, top: 9.h),
+              child: CustomIconButton(
+                  height: 40.adaptSize,
+                  width: 40.adaptSize,
+                  padding: EdgeInsets.all(12.h),
+                  onTap: () {
+                    onTapArrowLeft();
+                  },
+                  child: CustomImageView(
+                      imagePath: ImageConstant.imgArrowLeftBlack900))),
+        ],
+      ),
+    );
   }
 
   /// Navigates to the previous screen.
@@ -120,7 +131,7 @@ class SignInVerifictionScreen extends GetWidget<SignInVerifictionController> {
     }
   }
 
-  void _onVerifyAccountSuccess() {
+  Future<void> _onVerifyAccountSuccess() async {
     Get.rawSnackbar(message: "Your Account has been created successfully");
     Get.toNamed(AppRoutes.signInScreen);
   }

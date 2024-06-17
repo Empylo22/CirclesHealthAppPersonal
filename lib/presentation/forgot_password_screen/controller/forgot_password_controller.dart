@@ -25,23 +25,23 @@ class ForgotPasswordController extends GetxController {
   /// Calls the https://empylo-app.vercel.app/auth/user/forgot-password API with the specified request data.
   ///
   /// The [Map] parameter represents request body
- Future<void> callForgotPasswordPost(Map req) async {
-  try {
-    postForgotPasswordPostResp =
-        await Get.find<ApiClient>().forgotPasswordPost(
-      headers: {
-        'Content-type': 'application/json',
-      },
-      requestData: req,
-    );
-    if (postForgotPasswordPostResp.status != 200) {
-      throw postForgotPasswordPostResp;
+  Future<void> callForgotPasswordPost(Map req) async {
+    try {
+      postForgotPasswordPostResp =
+          await Get.find<ApiClient>().forgotPasswordPost(
+        headers: {
+          'Content-type': 'application/json',
+        },
+        requestData: req,
+      );
+      if (postForgotPasswordPostResp.status != 200) {
+        throw postForgotPasswordPostResp;
+      }
+      _handleForgotPasswordPostSuccess();
+    } catch (e) {
+      rethrow;
     }
-    _handleForgotPasswordPostSuccess();
-  } catch (e) {
-    rethrow;
   }
-}
 
   /// handles the success response for the API
   void _handleForgotPasswordPostSuccess() {}

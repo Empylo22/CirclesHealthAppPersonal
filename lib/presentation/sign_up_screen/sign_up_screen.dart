@@ -298,9 +298,10 @@ class SignUpScreen extends GetWidget<SignUpController> {
   /// Navigates to the signUpUserSelectionScreen when the action is triggered.
   void _onOnTapSignUpSuccess() {
     Get.rawSnackbar(
-            message: controller.postSignupUserResp.message.toString() ?? 'Account Created Successfully, Proceed to verify your account',
-            snackPosition: SnackPosition.TOP,
-            backgroundColor: Colors.green);
+        message: controller.postSignupUserResp.message.toString() ??
+            'Account Created Successfully, Proceed to verify your account',
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: Colors.green);
     Get.toNamed(
       AppRoutes.signInVerifictionScreen,
     );

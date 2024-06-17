@@ -38,12 +38,12 @@ class SignInController extends GetxController {
         requestData: req,
       );
       // Assuming the response structure contains an 'accessToken'
-     // int? userId = postLoginUserResp.result?.user?.id;
+      // int? userId = postLoginUserResp.result?.user?.id;
       String? accessToken = postLoginUserResp.result?.accessToken;
       if (postLoginUserResp.status != 200) {
-      throw postLoginUserResp;
-    }
-      
+        throw postLoginUserResp;
+      }
+
       if (accessToken != null) {
         // Save the token in SharedPreferences
         await saveToken(accessToken);
