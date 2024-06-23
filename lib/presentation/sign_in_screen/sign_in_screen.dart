@@ -153,23 +153,6 @@ class SignInScreen extends GetWidget<SignInController> {
                                     onTapSignIn();
                                   }),
                               SizedBox(height: 15.v),
-                              GestureDetector(
-                                  onTap: () {
-                                    onTapVerifyAccount();
-                                  },
-                                  child: RichText(
-                                      text: TextSpan(children: [
-                                        TextSpan(
-                                            text: "Want to verify your account?"
-                                                .tr,
-                                            style: CustomTextStyles
-                                                .titleSmallff191919),
-                                        TextSpan(
-                                            text: "Click here".tr,
-                                            style: CustomTextStyles
-                                                .titleSmallffffb347)
-                                      ]),
-                                      textAlign: TextAlign.left)),
                               SizedBox(height: 15.v),
                               Row(
                                   mainAxisAlignment: MainAxisAlignment.center,

@@ -1,21 +1,59 @@
-import '../home_personal_user_page/widgets/sleepqualitysection_item_widget.dart';
-import 'controller/home_personal_user_controller.dart';
-import 'models/home_personal_user_model.dart';
-import 'models/sleepqualitysection_item_model.dart';
-import 'package:empylo/core/app_export.dart';
+import 'dart:convert';
 import 'package:empylo/widgets/app_bar/appbar_leading_image.dart';
 import 'package:empylo/widgets/app_bar/appbar_subtitle_five.dart';
 import 'package:empylo/widgets/app_bar/appbar_trailing_iconbutton.dart';
 import 'package:empylo/widgets/app_bar/custom_app_bar.dart';
 import 'package:empylo/widgets/custom_elevated_button.dart';
+import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
+import 'package:empylo/core/app_export.dart';
 import 'package:flutter/material.dart';
+import '../home_personal_user_page/widgets/sleepqualitysection_item_widget.dart';
+import 'controller/home_personal_user_controller.dart';
+import 'models/home_personal_user_model.dart';
+import 'models/sleepqualitysection_item_model.dart';
 
-// ignore_for_file: must_be_immutable
-class HomePersonalUserPage extends StatelessWidget {
-  HomePersonalUserPage({Key? key}) : super(key: key);
 
-  HomePersonalUserController controller =
-      Get.put(HomePersonalUserController(HomePersonalUserModel().obs));
+class HomePersonalUserPage extends StatefulWidget {
+  @override
+  _HomePersonalUserPageState createState() => _HomePersonalUserPageState();
+}
+
+class _HomePersonalUserPageState extends State<HomePersonalUserPage> {
+  HomePersonalUserController controller = Get.put(HomePersonalUserController(HomePersonalUserModel().obs));
+  String firstName = "";
+  String profileImage = "";
+  String currentDate = DateFormat('EEEE, d MMMM').format(DateTime.now());
+
+  @override
+  void initState() {
+    super.initState();
+    fetchUserData();
+  }
+
+  Future<void> fetchUserData() async {
+    try {
+      String? accessToken = await getSavedToken();
+      Map<String, dynamic> decodedToken = decodeToken(accessToken!);
+      String? userId = decodedToken['sub']['id']?.toString();
+      final response = await http.get(
+        Uri.parse('https://api.empylo.com/user/get-user-info/$userId',
+        ));
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        setState(() {
+          firstName = data['result']['firstName'];
+          profileImage = data['result']['profileImage'];
+        });
+      } else {
+        // Handle error response
+        print('Failed to load user data');
+      }
+    } catch (e) {
+      // Handle any exceptions
+      print('Error: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +73,7 @@ class HomePersonalUserPage extends StatelessWidget {
                                   padding: EdgeInsets.only(left: 4.h),
                                   child: Row(children: [
                                     CustomImageView(
-                                        imagePath: ImageConstant.imgEllipse3,
+                                        imagePath: profileImage.isNotEmpty ? profileImage : ImageConstant.imgEllipse3,
                                         height: 64.adaptSize,
                                         width: 64.adaptSize,
                                         radius: BorderRadius.circular(32.h)),
@@ -46,7 +84,7 @@ class HomePersonalUserPage extends StatelessWidget {
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: [
-                                              Text("lbl_hi_jane".tr,
+                                              Text("Hi, $firstName",
                                                   style: CustomTextStyles
                                                       .headlineLargeInter),
                                               Text("msg_how_re_you_feeling".tr,
@@ -72,23 +110,29 @@ class HomePersonalUserPage extends StatelessWidget {
 
   /// Section Widget
   PreferredSizeWidget _buildAppBar() {
-    return CustomAppBar(
-        leadingWidth: 26.h,
-        leading: AppbarLeadingImage(
-            imagePath: ImageConstant.imgCalendar,
-            margin: EdgeInsets.only(left: 16.h, top: 22.v, bottom: 23.v)),
-        title: AppbarSubtitleFive(
-            text: "msg_friday_23_november".tr,
-            margin: EdgeInsets.only(left: 5.h)),
-        actions: [
-          AppbarTrailingIconbutton(
-              imagePath: ImageConstant.imgFrame12,
-              margin: EdgeInsets.symmetric(horizontal: 17.h, vertical: 8.v),
-              onTap: () {
-                onTapIconButton();
-              })
-        ]);
-  }
+  String currentDate = DateFormat('EEEE, d MMMM').format(DateTime.now());
+  
+  return CustomAppBar(
+    leadingWidth: 26.h,
+    leading: AppbarLeadingImage(
+      imagePath: ImageConstant.imgCalendar,
+      margin: EdgeInsets.only(left: 16.h, top: 22.v, bottom: 23.v),
+    ),
+    title: AppbarSubtitleFive(
+      text: currentDate,
+      margin: EdgeInsets.only(left: 5.h),
+    ),
+    actions: [
+      AppbarTrailingIconbutton(
+        imagePath: ImageConstant.imgFrame12,
+        margin: EdgeInsets.symmetric(horizontal: 17.h, vertical: 8.v),
+        onTap: () {
+          onTapIconButton();
+        },
+      ),
+    ],
+  );
+}
 
   /// Section Widget
   Widget _buildWellbeingScore() {

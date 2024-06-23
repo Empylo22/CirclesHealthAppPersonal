@@ -1,4 +1,5 @@
 import 'package:empylo/core/app_export.dart';
+import 'package:empylo/data/models/loginUser/post_login_user_resp.dart';
 import 'package:empylo/presentation/sign_up_screen/models/sign_up_model.dart';
 import 'package:flutter/material.dart';
 import 'package:empylo/data/models/signupUser/post_signup_user_resp.dart';
@@ -24,6 +25,7 @@ class SignUpController extends GetxController {
   Rx<bool> iAgreeToTheTermsAndPrivacy = false.obs;
 
   PostSignupUserResp postSignupUserResp = PostSignupUserResp();
+  PostLoginUserResp postLoginUserResp = PostLoginUserResp();
 
   @override
   void onClose() {
@@ -37,6 +39,7 @@ class SignUpController extends GetxController {
   ///
   /// The [Map] parameter represents request body
   Future<void> callSignupUser() async {
+    
     try {
       final req = {
         'email': emailController.text,

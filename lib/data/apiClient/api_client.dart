@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:empylo/core/app_export.dart';
 import 'package:empylo/core/utils/progress_dialog_utils.dart';
 import 'package:empylo/data/models/forgotPasswordPost/post_forgot_password_post_resp.dart';
@@ -7,7 +6,6 @@ import 'package:empylo/data/models/loginUser/post_login_user_resp.dart';
 import 'package:empylo/data/models/resetPassword/patch_reset_password_resp.dart';
 import 'package:empylo/data/models/signupUser/post_signup_user_resp.dart';
 import 'package:empylo/data/models/verifyUserAuth/post_verify_user_auth_resp.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:empylo/data/models/updateSignUpProfile/post_update_signup_resp.dart';
 import 'dart:io';
 import 'package:http/http.dart' as http;
@@ -52,7 +50,7 @@ class ApiClient extends GetConnect {
   /// Throws an error if the request fails or an exception occurs.
   Future<PatchResetPasswordResp> resetPassword({
     Map<String, String> headers = const {},
-    required Map<String, dynamic> requestData,
+    Map requestData = const {},
   }) async {
     ProgressDialogUtils.showProgressDialog();
     try {
@@ -64,14 +62,11 @@ class ApiClient extends GetConnect {
       );
       ProgressDialogUtils.hideProgressDialog();
       if (_isSuccessCall(response)) {
-        return PatchResetPasswordResp.fromJson(json.decode(response.body));
+        return PatchResetPasswordResp.fromJson(response.body);
       } else {
-        // Check if response.body is a String, if not, treat it as an error message
-        if (response.body is String) {
-          throw 'Something Went Wrong!';
-        } else {
-          throw PatchResetPasswordResp.fromJson(json.decode(response.body));
-        }
+        throw response.body != null
+            ? PatchResetPasswordResp.fromJson(response.body)
+            : 'Something Went Wrong!';
       }
     } catch (error, stackTrace) {
       ProgressDialogUtils.hideProgressDialog();
@@ -89,103 +84,77 @@ class ApiClient extends GetConnect {
   /// with the provided headers and request data
   /// Returns a [PostUpdateSignupProfileResp] object representing the response.
   /// Throws an error if the request fails or an exception occurs.
-
   Future<PostUpdateSignupProfileResp> updateSignupProfile({
-    required String? accessToken,
-    Map<String, String> headers = const {},
-    Map requestData = const {},
-    File? file,
-  }) async {
-    headers['Content-Type'] = 'multipart/form-data';
-    headers['Authorization'] = 'Bearer $accessToken';
-    ProgressDialogUtils.showProgressDialog();
+  required String? accessToken,
+  required Map<String, dynamic> requestData,
+  File? file,
+}) async {
+  // Define headers for the request
+  Map<String, String> headers = {
+    'Content-Type': 'multipart/form-data',
+    'Authorization': 'Bearer $accessToken',
+  };
 
-    try {
-      await isNetworkConnected();
+  ProgressDialogUtils.showProgressDialog();
 
-      // Fetches the saved token
-      String? accessToken = await getSavedToken();
+  try {
+    await isNetworkConnected();
 
-      if (accessToken != null) {
-        // Decodes the token to extract the ID
-        Map<String, dynamic> decodedToken = decodeToken(accessToken);
-        String? userId = decodedToken['sub']['id']?.toString();
-        //String? userId= postLoginUserResp.result?.user?.id?.toString();
+    // Fetch the saved token and decode to get user ID
+    String? accessToken = await getSavedToken();
 
-        if (userId != null) {
-          // Constructs the endpoint with the user ID
-          String endpoint = '$url/user/update-user-info/$userId';
+    if (accessToken != null) {
+      Map<String, dynamic> decodedToken = decodeToken(accessToken);
+      String? userId = decodedToken['sub']['id']?.toString(); // Adjust based on your token structure
 
-          if (file != null) {
-            // Create multipart request if file is present
-            var request = http.MultipartRequest('PATCH', Uri.parse(endpoint));
+      if (userId != null) {
+        // Construct the endpoint with the user ID
+        String endpoint = '$url/user/update-user-info/$userId';
 
-            // Add headers
-            request.headers.addAll(headers);
+        // Create a multipart request
+        var request = http.MultipartRequest('PATCH', Uri.parse(endpoint));
 
-            // Add fields
-            requestData.forEach((key, value) {
-              request.fields[key] = value.toString();
-            });
+        // Add headers to the request
+        request.headers.addAll(headers);
 
-            // Add file
-            request.files.add(
-              await http.MultipartFile.fromPath('profileImage', file.path),
-            );
+        // Add fields to the request
+        requestData.forEach((key, value) {
+          request.fields[key] = value.toString();
+        });
 
-            // Send request and get response
-            var streamedResponse = await request.send();
-            var response = await http.Response.fromStream(streamedResponse);
-
-            ProgressDialogUtils.hideProgressDialog();
-
-            if (_isSuccessCallUp(response)) {
-              return PostUpdateSignupProfileResp.fromJson(
-                  jsonDecode(response.body));
-            } else {
-              throw response.body != null
-                  ? PostUpdateSignupProfileResp.fromJson(
-                      jsonDecode(response.body))
-                  : 'Something Went Wrong!';
-            }
-          } else {
-            // If no file, send regular JSON request
-            var response = await httpClient.post(
-              endpoint,
-              headers: headers,
-              body: jsonEncode(requestData),
-            );
-
-            ProgressDialogUtils.hideProgressDialog();
-
-            if (_isSuccessCall(response)) {
-              return PostUpdateSignupProfileResp.fromJson(
-                  jsonDecode(response.body));
-            } else {
-              throw 'Request is not proper';
-            }
-          }
-        } else {
-          ProgressDialogUtils.hideProgressDialog();
-          throw 'User ID not found in Response';
+        // Add file to the request if provided
+        if (file != null) {
+          request.files.add(
+            await http.MultipartFile.fromPath('profileImage', file.path),
+          );
         }
+
+        // Send the request and get the response
+        var streamedResponse = await request.send();
+        var response = await http.Response.fromStream(streamedResponse);
+
+        ProgressDialogUtils.hideProgressDialog();
+
+        if (_isSuccessCallUp(response)) {
+          return PostUpdateSignupProfileResp.fromJson(jsonDecode(response.body));
+        } else {
+          throw ErrorResponse.fromJson(jsonDecode(response.body));
+        }
+      } else {
+        ProgressDialogUtils.hideProgressDialog();
+        throw 'User ID not found in Response';
       }
-
-      // Handles cases where token or userId is null
-      ProgressDialogUtils.hideProgressDialog();
-      throw 'Invalid User ID';
-    } catch (error, stackTrace) {
-      ProgressDialogUtils.hideProgressDialog();
-
-      Logger.log(
-        error,
-        stackTrace: stackTrace,
-      );
-
-      rethrow;
     }
-  }
 
+    // Handle cases where token or userId is null
+    ProgressDialogUtils.hideProgressDialog();
+    throw 'Invalid User ID';
+  } catch (error, stackTrace) {
+    ProgressDialogUtils.hideProgressDialog();
+    Logger.log(error, stackTrace: stackTrace);
+    rethrow;
+  }
+}
   /// Performs API call for https://api.empylo.com/auth/user/forgot-password
   ///
   /// Sends a POST request to the server's 'https://api.empylo.com/auth/user/forgot-password' endpoint

@@ -287,53 +287,44 @@ class ProfileSetupScreen extends GetWidget<ProfileSetupController> {
   }
 
   /// Navigates to the dailyAssessmentDefaultScreen when the action is triggered.
-  Future<void> onTapSaveContinue() async {
-    if (_formKey.currentState!.validate()) {
-      try {
-        // Get the selected profile picture file from the controller
-        File? profilePictureFile = controller.selectedProfilePicture;
+ Future<void> onTapSaveContinue() async {
+  if (_formKey.currentState!.validate()) {
+    try {
+      // Get the selected profile picture file from the controller
+      File? profilePictureFile = controller.selectedProfilePicture;
 
-        if (profilePictureFile == null) {
-          // Handles case where no profile picture is selected
-          Get.rawSnackbar(
-              message: 'Please choose a valid Image',
-              snackPosition: SnackPosition.TOP,
-              backgroundColor: Colors.red);
-        }
-        // Creates an instance of UpdateProfileRequest
-        PostUpdateSignUpProfileRequest data =
-            await PostUpdateSignUpProfileRequest.getInstance();
-
-        // Updates account type based on user interaction
-        await PostUpdateSignUpProfileRequest.updateAccountType('personalUser');
-
-        // Create an instance of File by picking the file
-        final pickedFile = controller.selectedProfilePicture;
-
-        if (pickedFile != null) {
-          File file = File(pickedFile.path);
-          SharedPreferences prefs = await SharedPreferences.getInstance();
-          await prefs.setString('filename', pickedFile.path);
-          print('File picked and saved: ${pickedFile.path}');
-
-          // Call the method to update the signup profile
-          await controller.callUpdateSignupProfile(file);
-
-          // Navigate to the next screen
-          _onUpdateProfileSuccess();
-        } else {
-          // Handle case where no file is selected
-          print('No file selected.');
-        }
-      } on PostUpdateSignupProfileResp {
-        _onUpdateProfileError();
-      } on NoInternetException catch (e) {
-        Get.rawSnackbar(message: e.toString());
-      } catch (e) {
-        // Handles generic errors
+      if (profilePictureFile == null) {
+        // Handles case where no profile picture is selected
+        Get.rawSnackbar(
+          message: 'Please choose a valid Image',
+          snackPosition: SnackPosition.TOP,
+          backgroundColor: Colors.red,
+        );
+        return;
       }
+
+      // Create an instance of PostUpdateSignUpProfileRequest with all required fields
+      final requestData = {
+        'firstName': controller.pepiconspencilpenController.text,
+        'lastName': controller.lastnameController.text,
+        'DOB': controller.dateofbirthController.text,
+        'gender': controller.selectedGender,
+        'address': controller.selectedLocation,
+        'accountType': await PostUpdateSignUpProfileRequest.getAccountType(),
+        // Add other fields as required
+      };
+
+      // Call the method to update the signup profile
+      await controller.callUpdateSignupProfile(profilePictureFile);
+
+      // Navigate to the next screen
+      _onUpdateProfileSuccess();
+    } catch (e) {
+      _onUpdateProfileError();
     }
   }
+}
+
 
   void _onUpdateProfileSuccess() {
     Get.rawSnackbar(

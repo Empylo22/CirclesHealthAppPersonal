@@ -1,3 +1,4 @@
+import 'package:empylo/presentation/sign_up_screen/controller/sign_up_controller.dart';
 import 'package:empylo/widgets/custom_icon_button.dart';
 import 'controller/sign_in_verifiction_controller.dart';
 import 'package:empylo/core/app_export.dart';
@@ -9,9 +10,9 @@ import 'package:empylo/data/models/verifyUserAuth/post_verify_user_auth_req.dart
 import 'package:empylo/data/models/verifyUserAuth/post_verify_user_auth_resp.dart';
 
 class SignInVerifictionScreen extends GetWidget<SignInVerifictionController> {
-  const SignInVerifictionScreen({Key? key}) : super(key: key);
-
-  @override
+   SignInVerifictionScreen({Key? key}) : super(key: key);
+     SignUpController signUpController = SignUpController(); // Find the SignupController
+    @override
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
@@ -47,7 +48,7 @@ class SignInVerifictionScreen extends GetWidget<SignInVerifictionController> {
                                 text: "msg_we_sent_a_four_digit2".tr,
                                 style: CustomTextStyles.bodyMediumff000000),
                             TextSpan(
-                                text: "msg_jane_gmail_com".tr,
+                                text: signUpController.emailController.text,
                                 style: CustomTextStyles
                                     .titleSmallSwitzerVariableff00a99d),
                             TextSpan(

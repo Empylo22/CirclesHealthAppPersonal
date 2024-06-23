@@ -281,7 +281,9 @@ class SignUpScreen extends GetWidget<SignUpController> {
   ///
   /// Throws a `NoInternetException` if there is no internet connection.
   Future<void> onTapSignUp() async {
+    final email =  controller.emailController.text;
     if (_formKey.currentState!.validate()) {
+      await saveEmail(email);
       try {
         await controller.callSignupUser();
         _onOnTapSignUpSuccess();

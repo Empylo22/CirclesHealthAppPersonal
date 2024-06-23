@@ -39,6 +39,9 @@ class SignInVerifictionController extends GetxController with CodeAutoFill {
         },
         requestData: req,
       );
+      if ( postVerifyUserAuthResp.status != 200) {
+        throw postVerifyUserAuthResp;
+      }
       _handleVerifyUserAuthSuccess();
     } on PostVerifyUserAuthResp catch (e) {
       postVerifyUserAuthResp = e;

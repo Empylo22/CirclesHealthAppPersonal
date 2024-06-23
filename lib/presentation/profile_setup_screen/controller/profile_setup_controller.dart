@@ -91,50 +91,47 @@ class ProfileSetupController extends GetxController {
   }
 
   Future<void> callUpdateSignupProfile(File? file) async {
-    try {
-      // Retrieve filename from shared preferences
-      String? filename = await getFileName();
-      String? accessToken = await getSavedToken();
-      if (postForgotPasswordPostResp.status != 200) {
-        throw postForgotPasswordPostResp;
-      }
-      if (filename != null) {
-        // Check if file exists
-        File file = File(filename);
-        if (await file.exists()) {
-          // Create the request data with the necessary fields
-          final requestData = {
-            'firstName': pepiconspencilpenController.text,
-            'lastName': lastnameController.text,
-            'DOB': dateofbirthController.text,
-            'gender': selectedGender,
-            'address': selectedLocation,
-            'accountType':
-                await PostUpdateSignUpProfileRequest.getAccountType(),
-            'profileImage': await file.readAsBytesSync(),
-          };
+  try {
+    String? accessToken = await getSavedToken();
+    
+    if (accessToken != null) {
+      // Create the request data with the necessary fields
+      final requestData = {
+        'firstName': pepiconspencilpenController.text,
+        'lastName': lastnameController.text,
+        'DOB': dateofbirthController.text,
+        'gender': selectedGender,
+        'address': selectedLocation,
+        'accountType': await PostUpdateSignUpProfileRequest.getAccountType(),
+        
+      };
 
-          // Call the API to update the signup profile
-          await Get.find<ApiClient>().updateSignupProfile(
-              accessToken: accessToken,
-              headers: {'Content-type': 'multipart/form-data'},
-              requestData: requestData);
+      // Call the API to update the signup profile
+      await Get.find<ApiClient>().updateSignupProfile(
+        accessToken: accessToken,
+        requestData: requestData,
+        file: file,
+      );
 
-          // Handle the success response
-          _handleUpdateSignupProfileSuccess();
-        } else {
-          print('File does not exist at path: $filename');
-        }
-      } else {
-        print('Filename not found in shared preferences');
-      }
-    } catch (e) {
-      // Re-throw the exception to handle it at a higher level if needed
-      print(e);
-      rethrow;
+      // Handle the success response
+      _handleUpdateSignupProfileSuccess();
+    } else {
+      throw 'Access token is null';
     }
+  } catch (e) {
+    // Re-throw the exception to handle it at a higher level if needed
+    print('Error: ${e.runtimeType} - ${e.toString()}');
+    print('Stack trace: ${StackTrace.current}');
+    rethrow;
   }
+}
 
-// Handles the success response for updating the signup profile
-  void _handleUpdateSignupProfileSuccess() {}
+void _handleUpdateSignupProfileSuccess() {
+  Get.rawSnackbar(
+    message: 'Profile Updated Successfully',
+    snackPosition: SnackPosition.TOP,
+    backgroundColor: Colors.green,
+  );
+  Get.toNamed(AppRoutes.homePersonalUserContainerScreen);
+}
 }
