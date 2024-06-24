@@ -13,7 +13,6 @@ import 'controller/home_personal_user_controller.dart';
 import 'models/home_personal_user_model.dart';
 import 'models/sleepqualitysection_item_model.dart';
 
-
 class HomePersonalUserPage extends StatefulWidget {
   @override
   _HomePersonalUserPageState createState() => _HomePersonalUserPageState();
@@ -34,11 +33,20 @@ class _HomePersonalUserPageState extends State<HomePersonalUserPage> {
   Future<void> fetchUserData() async {
     try {
       String? accessToken = await getSavedToken();
-      Map<String, dynamic> decodedToken = decodeToken(accessToken!);
+      if (accessToken == null) {
+        throw Exception('Access token is null');
+      }
+      Map<String, dynamic> decodedToken = decodeToken(accessToken);
       String? userId = decodedToken['sub']['id']?.toString();
+      if (userId == null) {
+        throw Exception('User ID is null');
+      }
       final response = await http.get(
-        Uri.parse('https://api.empylo.com/user/get-user-info/$userId',
-        ));
+        Uri.parse('https://api.empylo.com/user/get-user-info/$userId'),
+        headers: {
+          'Authorization': 'Bearer $accessToken',
+        },
+      );
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         setState(() {
@@ -47,7 +55,7 @@ class _HomePersonalUserPageState extends State<HomePersonalUserPage> {
         });
       } else {
         // Handle error response
-        print('Failed to load user data');
+        print('Failed to load user data: ${response.statusCode}');
       }
     } catch (e) {
       // Handle any exceptions
@@ -253,8 +261,8 @@ class _HomePersonalUserPageState extends State<HomePersonalUserPage> {
                                         CustomImageView(
                                             imagePath:
                                                 ImageConstant.imgEllipse31,
-                                            height: 32.adaptSize,
-                                            width: 32.adaptSize,
+                                            height: 30.adaptSize,
+                                            width: 30.adaptSize,
                                             radius:
                                                 BorderRadius.circular(16.h)),
                                         Align(
@@ -315,8 +323,8 @@ class _HomePersonalUserPageState extends State<HomePersonalUserPage> {
     return Column(children: [
       CustomImageView(
           imagePath: ImageConstant.imgEllipse29,
-          height: 32.adaptSize,
-          width: 32.adaptSize,
+          height: 30.adaptSize,
+          width: 30.adaptSize,
           radius: BorderRadius.circular(16.h)),
       Text(mike,
           style: theme.textTheme.bodySmall!.copyWith(color: appTheme.black900))

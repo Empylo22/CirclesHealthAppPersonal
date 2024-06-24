@@ -124,8 +124,8 @@ class ProfilePersonalUserMyCirclesPage extends StatelessWidget {
                                         CustomImageView(
                                             imagePath:
                                                 ImageConstant.imgEllipse31,
-                                            height: 32.adaptSize,
-                                            width: 32.adaptSize,
+                                            height: 30.adaptSize,
+                                            width: 30.adaptSize,
                                             radius:
                                                 BorderRadius.circular(16.h)),
                                         Align(
@@ -243,8 +243,8 @@ class ProfilePersonalUserMyCirclesPage extends StatelessWidget {
     return Column(mainAxisSize: MainAxisSize.min, children: [
       CustomImageView(
           imagePath: ImageConstant.imgEllipse30,
-          height: 32.adaptSize,
-          width: 32.adaptSize,
+          height: 30.adaptSize,
+          width: 30.adaptSize,
           radius: BorderRadius.circular(16.h)),
       Text(userName,
           style: theme.textTheme.bodySmall!.copyWith(color: appTheme.black900))
